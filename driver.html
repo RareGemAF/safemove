@@ -3,62 +3,82 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SafeMove | Driver Dashboard</title>
+  <title>SafeMove | Driver Portal</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
-    <h1>SafeMove</h1>
+    <h1>SafeMove | Driver Portal</h1>
     <nav>
       <ul>
         <li><a href="index.html">Home</a></li>
-        <li><a href="rider.html">Rider</a></li>
-        <li><a href="#" class="active">Driver</a></li>
-      </ul>
+       </ul>
     </nav>
   </header>
 
-  <section class="dashboard">
-    <h2>Welcome, Driver 🚗</h2>
-    <p>Ensure safety for yourself and your passengers by staying connected and alert.</p>
-
-    <div class="driver-status">
-      <h3>Status: <span id="driverStatus">Offline</span></h3>
-      <button id="toggleStatus">Go Online</button>
+  <main>
+    <!-- Driver Registration -->
+    <div id="driverRegistration" class="form-box">
+      <h2>Driver Registration</h2>
+      <input type="text" id="driverName" placeholder="Full Name">
+      <input type="email" id="driverEmail" placeholder="Email">
+      <input type="tel" id="driverPhone" placeholder="Phone Number +256 700 000000">
+      <input type="text" id="driverPermit" placeholder="Driving Permit Number">
+      <button id="registerDriver">Register</button>
+      <p>Already registered? <a href="#" id="showDriverLogin">Login here</a></p>
     </div>
 
-    <div id="rideAssignments" class="hidden">
-      <h3>Assigned Ride</h3>
-      <p><strong>Pickup:</strong> Makerere University</p>
-      <p><strong>Drop-off:</strong> Nakawa</p>
-      <p><strong>Passenger:</strong> Jane Doe</p>
-      <button id="startRideBtn">Start Ride</button>
+    <!-- Driver Login -->
+    <div id="driverLogin" class="form-box hidden">
+      <h2>Driver Login</h2>
+      <input type="tel" id="driverLoginPhone" placeholder="Phone Number">
+      <input type="text" id="driverLoginCode" placeholder="Verification Code">
+      <button id="loginDriver">Login</button>
+      <p>New driver? <a href="#" id="showDriverRegister">Register here</a></p>
     </div>
 
-    <div id="driverTripStatus" class="trip-box hidden">
-      <h3>Trip in Progress</h3>
-      <p id="driverLocation">Getting location...</p>
-      <button id="endRideBtn">End Ride</button>
-    </div>
+    <!-- Driver Dashboard -->
+    <section id="driverDashboard" class="dashboard hidden">
+      <h2>Welcome, Driver 🚗</h2>
+      <p>Ensure safety for yourself and passengers by staying connected and alert.</p>
 
-    <div class="safety-tips">
-      <h3>Safety Tips 🛡️</h3>
-      <ul>
-        <li>Always confirm the passenger's name before starting the trip.</li>
-        <li>Avoid isolated routes at night when possible.</li>
-        <li>Keep emergency numbers easily accessible.</li>
-        <li>Ensure your vehicle is regularly serviced and insured.</li>
-      </ul>
-    </div>
+      <div class="driver-status">
+        <h3>Status: <span id="driverStatus">Offline</span></h3>
+        <button id="toggleStatus">Go Online</button>
+      </div>
 
-    <button id="driverSOS" class="sos">🚨 Emergency SOS</button>
-  </section>
+      <div id="rideAssignments" class="hidden">
+        <h3>Assigned Ride</h3>
+        <p><strong>Pickup:</strong> Makerere University</p>
+        <p><strong>Drop-off:</strong> Nakawa</p>
+        <p><strong>Passenger:</strong> Jane Doe</p>
+        <button id="startRideBtn">Start Ride</button>
+      </div>
+
+      <div id="driverTripStatus" class="trip-box hidden">
+        <h3>Trip in Progress</h3>
+        <p id="driverLocation">Getting location...</p>
+        <button id="endRideBtn">End Ride</button>
+      </div>
+
+      <div class="safety-tips">
+        <h3>Safety Tips 🛡️</h3>
+        <ul>
+          <li>Always confirm the passenger's name before starting the trip.</li>
+          <li>Avoid isolated routes at night when possible.</li>
+          <li>Keep emergency numbers easily accessible.</li>
+          <li>Ensure your vehicle is regularly serviced and insured.</li>
+        </ul>
+      </div>
+
+      <button id="driverSOS" class="sos">🚨 Emergency SOS</button>
+    </section>
+  </main>
 
   <footer>
     <p>© 2025 SafeMove by Unique Innovators Team | Code Queen Cohort 14</p>
   </footer>
-  </footer>
-
+ 
   <script src="script.js"></script>
 </body>
 </html>

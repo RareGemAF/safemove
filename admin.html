@@ -3,49 +3,58 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SafeMove | Admin Dashboard</title>
+  <title>SafeMove | Admin Portal</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
-    <h1>SafeMove</h1>
+    <h1>SafeMove | Admin Portal</h1>
     <nav>
       <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="rider.html">Rider</a></li>
-        <li><a href="driver.html">Driver</a></li>
-        <li><a href="#" class="active">Admin</a></li>
+         <li><a href="index.html">Home</a></li>
       </ul>
     </nav>
   </header>
 
-  <section class="dashboard">
-    <h2>Admin Monitoring Dashboard 🖥️</h2>
-    <p>Track all safety alerts, reports, and feedback in real-time.</p>
-
-    <div class="admin-panels">
-      <div class="panel">
-        <h3>SOS Alerts 🚨</h3>
-        <ul id="sosList" class="list"></ul>
-      </div>
-
-      <div class="panel">
-        <h3>Incident Reports 🧾</h3>
-        <ul id="reportList" class="list"></ul>
-      </div>
-
-      <div class="panel">
-        <h3>User Feedback ⭐</h3>
-        <ul id="feedbackList" class="list"></ul>
-      </div>
+  <main>
+    <!-- Admin Login -->
+    <div id="adminLogin" class="form-box">
+      <h2>Admin Login</h2>
+      <input type="text" id="adminUsername" placeholder="Username">
+      <input type="password" id="adminPassword" placeholder="Password">
+      <button id="loginAdmin">Login</button>
     </div>
-  </section>
+
+    <!-- Admin Dashboard -->
+    <section id="adminDashboard" class="dashboard hidden">
+      <h2>Admin Monitoring Dashboard 🖥️</h2>
+      <p>Track all safety alerts, reports, and feedback in real-time.</p>
+
+      <div class="admin-panels">
+        <div class="panel">
+          <h3>SOS Alerts 🚨</h3>
+          <ul id="sosList" class="data-list"></ul>
+        </div>
+
+        <div class="panel">
+          <h3>Incident Reports 🧾</h3>
+          <ul id="incidentList" class="data-list"></ul>
+        </div>
+
+        <div class="panel">
+          <h3>User Feedback ⭐</h3>
+          <ul id="feedbackList" class="data-list"></ul>
+        </div>
+      </div>
+
+      <button id="clearData">🧹 Clear All Data</button>
+    </section>
+  </main>
 
   <footer>
     <p>© 2025 SafeMove by Unique Innovators Team | Code Queen Cohort 14</p>
-  </footer>
-  </footer>
-
+   </footer>
+  
   <script src="script.js"></script>
 </body>
 </html>

@@ -3,57 +3,75 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SafeMove | Rider Dashboard</title>
+  <title>SafeMove | Rider Portal</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
-    <h1>SafeMove</h1>
+    <h1>SafeMove | Rider Portal</h1>
     <nav>
       <ul>
         <li><a href="index.html">Home</a></li>
-        <li><a href="#" class="active">Rider</a></li>
-        <li><a href="driver.html">Driver</a></li>
-        <li><a href="admin.html">Admin</a></li>
       </ul>
     </nav>
   </header>
 
-  <section class="dashboard">
-    <h2>Welcome, Rider 🧍‍♀️</h2>
-    <p>Your safety is our priority. Use the tools below to stay protected and connected.</p>
-
-    <!-- SOS Button -->
-    <button id="sosBtn" class="sos">🚨 Emergency SOS</button>
-
-    <!-- Report Incident Section -->
-    <div class="report-section">
-      <h3>Report an Unsafe Incident 🧾</h3>
-      <textarea id="reportInput" placeholder="Describe what happened..." rows="4"></textarea>
-      <button id="submitReport">Submit Report</button>
+  <main>
+    <!-- Registration Form -->
+    <div id="riderRegistration" class="form-box">
+      <h2>Rider Registration</h2>
+      <input type="text" id="riderName" placeholder="Full Name" />
+      <input type="email" id="riderEmail" placeholder="Email" />
+      <input type="tel" id="riderPhone" placeholder="Phone Number +256 700 000000" />
+      <button id="registerRider">Register</button>
+      <p>Already registered? <a href="#" id="showLogin">Login here</a></p>
     </div>
 
-    <!-- Feedback Section -->
-    <div class="feedback-section">
-      <h3>Leave Feedback ⭐</h3>
-      <textarea id="feedbackInput" placeholder="Share your experience..." rows="3"></textarea>
-      <button id="submitFeedback">Submit Feedback</button>
+    <!-- Login Form -->
+    <div id="riderLogin" class="form-box hidden">
+      <h2>Rider Login</h2>
+      <input type="tel" id="riderLoginPhone" placeholder="Phone Number" />
+      <input type="text" id="riderLoginCode" placeholder="Verification Code" />
+      <button id="loginRider">Login</button>
+      <p>New rider? <a href="#" id="showRegister">Register here</a></p>
     </div>
 
-    <!-- Trip Simulation -->
-    <div class="trip-box">
-      <h3>Live Ride Tracking</h3>
-      <p id="riderLocation">Waiting for trip to start...</p>
-      <button id="startTripBtn">Start Trip</button>
-      <button id="endTripBtn" class="hidden">End Trip</button>
-    </div>
-  </section>
+    <!-- Rider Dashboard -->
+    <section id="riderDashboard" class="dashboard hidden">
+      <h2>Welcome, Rider 🧍‍♀️</h2>
+      <p>Your safety is our priority. Use the tools below to stay protected and connected.</p>
+
+      <!-- SOS Button -->
+      <button id="sosBtn" class="sos">🚨 Emergency SOS</button>
+
+      <!-- Report Incident Section -->
+      <div class="report-section">
+        <h3>Report an Unsafe Incident 🧾</h3>
+        <textarea id="reportInput" placeholder="Describe what happened..." rows="4"></textarea>
+        <button id="submitReport">Submit Report</button>
+      </div>
+
+      <!-- Feedback Section -->
+      <div class="feedback-section">
+        <h3>Leave Feedback ⭐</h3>
+        <textarea id="feedbackInput" placeholder="Share your experience..." rows="3"></textarea>
+        <button id="submitFeedback">Submit Feedback</button>
+      </div>
+
+      <!-- Trip Simulation -->
+      <div class="trip-box">
+        <h3>Live Ride Tracking</h3>
+        <p id="riderLocation">Waiting for trip to start...</p>
+        <button id="startTripBtn">Start Trip</button>
+        <button id="endTripBtn" class="hidden">End Trip</button>
+      </div>
+    </section>
+  </main>
 
   <footer>
     <p>© 2025 SafeMove by Unique Innovators Team | Code Queen Cohort 14</p>
   </footer>
-  </footer>
-
+ 
   <script src="script.js"></script>
 </body>
 </html>
