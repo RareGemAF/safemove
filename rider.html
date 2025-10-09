@@ -63,15 +63,17 @@
   <h3>Request a Ride 🚗 🛵</h3>
   <input type="text" id="pickupLocation" placeholder="Pickup Location">
   <input type="text" id="dropoffLocation" placeholder="Drop-off Location">
-  
+
   <label for="vehicleType">Choose Vehicle:</label>
   <select id="vehicleType">
     <option value="car">Car 🚗</option>
-    <option value="boda">Boda 🛵</option>
-    <p id="ridestatus"></p>
+     <option value="boda">Boda 🛵</option>
   </select>
 
-  <button id="requestRide">Request Ride</button>
+  <!-- Move status text OUTSIDE the select -->
+  <p id="rideStatus"></p>
+
+  <button id="requestRideBtn">Request Ride</button>
 </div>
 
   <!-- Ride Details & Tracking -->
