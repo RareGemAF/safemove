@@ -403,7 +403,7 @@ textarea { resize: vertical; }
     display: none;
     flex-direction: column;
     gap: 10px;
-    background-color: blue;
+    background-color: #004aad;
     position: absolute;
     top: 60px;
     right: 10px;
