@@ -1,4 +1,40 @@
+// === DEMO DRIVERS (for testing) ===
 document.addEventListener("DOMContentLoaded", () => {
+if (!localStorage.getItem("drivers")) {
+  const demoDrivers = [
+    {
+      name: "John",
+      email: "john@demo.com",
+      phone: "+256700000001",
+      permit: "U1234567",
+      vehicle: "car",
+      online: true
+    },
+    {
+      name: "Mary",
+      email: "mary@demo.com",
+      phone: "+256700000002",
+      permit: "U7654321",
+      vehicle: "boda",
+      online: true
+    }
+  ];
+  localStorage.setItem("drivers", JSON.stringify(demoDrivers));
+}
+// === AUTO SIMULATION OF DRIVER STATUS ===
+setInterval(() => {
+  let drivers = JSON.parse(localStorage.getItem("drivers") || "[]");
+  // Randomly toggle a few driver statuses
+  drivers.forEach(driver => {
+    // 50% chance to flip status
+    if (Math.random() < 0.5) driver.online = !driver.online;
+  });
+  localStorage.setItem("drivers", JSON.stringify(drivers));
+
+  // Notify any open rider pages about status change
+  localStorage.setItem("driverStatusUpdate", Date.now());
+}, 15000); // every 15 seconds
+
 
   /*** =================== DATA =================== ***/
   let riders = JSON.parse(localStorage.getItem("riders") || "[]");
@@ -105,34 +141,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  const requestRideBtn = document.getElementById("requestRideBtn");
-
-if (requestRideBtn) {
-  requestRideBtn.addEventListener("click", () => {
-    const vehicleSelect = document.getElementById("vehicleType");
-    if (!vehicleSelect) return alert("Vehicle type selector not found.");
-    
-    const vehicle = vehicleSelect.value;
-    drivers = JSON.parse(localStorage.getItem("drivers") || "[]");
-    const availableDriver = drivers.find(d => d.vehicle === vehicle && d.online);
-
-    if (!availableDriver) {
-      document.getElementById("rideStatus").textContent = `No ${vehicle} drivers online.`;
-      return;
-    }
-
-    const ride = {
-      driver: availableDriver.name,
-      vehicle: availableDriver.vehicle,
-      status: "assigned",
-      rider: "You",
-      startTime: new Date().toLocaleTimeString()
-    };
-    localStorage.setItem("currentRide", JSON.stringify(ride));
-
-    document.getElementById("rideStatus").textContent = `Driver ${availableDriver.name} (${availableDriver.vehicle}) is on the way! 🚗`;
-  });
-}
+  if (document.getElementById("requestRideBtn")) {
+    document.getElementById("requestRideBtn").addEventListener("click", () => {
+      const vehicle = document.getElementById("vehicleType").value;
+      drivers = JSON.parse(localStorage.getItem("drivers") || "[]");
+      const availableDriver = drivers.find(d => d.vehicle === vehicle && d.online);
+      if (!availableDriver) {
+        document.getElementById("rideStatus").textContent = `No ${vehicle} drivers online.`;
+        return;
+      }
+      const ride = { driver: availableDriver.name, vehicle: availableDriver.vehicle, status: "assigned", rider: "You" };
+      localStorage.setItem("currentRide", JSON.stringify(ride));
+      document.getElementById("rideStatus").textContent = `Driver ${availableDriver.name} (${availableDriver.vehicle}) is on the way!`;
+    });
+  }
 
   if (document.getElementById("sosBtn")) {
     document.getElementById("sosBtn").addEventListener("click", () => {
@@ -267,3 +289,42 @@ if (requestRideBtn) {
   }
 
 });
+
+
+
+
+
+// === DRIVER ONLINE/OFFLINE TOGGLE ===
+const toggleStatusBtn = document.getElementById("toggleStatus");
+const driverStatus = document.getElementById("driverStatus");
+
+if (toggleStatusBtn) {
+  toggleStatusBtn.addEventListener("click", () => {
+    const loggedInDriver = JSON.parse(localStorage.getItem("loggedInDriver"));
+
+    if (!loggedInDriver) {
+      alert("Please log in first before going online.");
+      return;
+    }
+
+    // Toggle driver status
+    loggedInDriver.online = !loggedInDriver.online;
+    driverStatus.textContent = loggedInDriver.online ? "🟢 Online" : "🔴 Offline";
+    toggleStatusBtn.textContent = loggedInDriver.online ? "Go Offline" : "Go Online";
+
+    // Update driver record in localStorage
+    let drivers = JSON.parse(localStorage.getItem("drivers")) || [];
+    const index = drivers.findIndex(d => d.email === loggedInDriver.email);
+
+    if (index !== -1) {
+      drivers[index].online = loggedInDriver.online;
+      localStorage.setItem("drivers", JSON.stringify(drivers));
+    }
+
+    localStorage.setItem("loggedInDriver", JSON.stringify(loggedInDriver));
+
+    alert(loggedInDriver.online
+      ? "✅ You are now ONLINE and visible to riders."
+      : "🚗 You are now OFFLINE.");
+  });
+}
