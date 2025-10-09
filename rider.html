@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SafeMove | Rider Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>SafeMove</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#" class="active">Rider</a></li>
+        <li><a href="driver.html">Driver</a></li>
+        <li><a href="admin.html">Admin</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="dashboard">
+    <h2>Welcome, Rider 🧍‍♀️</h2>
+    <p>Your safety is our priority. Use the tools below to stay protected and connected.</p>
+
+    <!-- SOS Button -->
+    <button id="sosBtn" class="sos">🚨 Emergency SOS</button>
+
+    <!-- Report Incident Section -->
+    <div class="report-section">
+      <h3>Report an Unsafe Incident 🧾</h3>
+      <textarea id="reportInput" placeholder="Describe what happened..." rows="4"></textarea>
+      <button id="submitReport">Submit Report</button>
+    </div>
+
+    <!-- Feedback Section -->
+    <div class="feedback-section">
+      <h3>Leave Feedback ⭐</h3>
+      <textarea id="feedbackInput" placeholder="Share your experience..." rows="3"></textarea>
+      <button id="submitFeedback">Submit Feedback</button>
+    </div>
+
+    <!-- Trip Simulation -->
+    <div class="trip-box">
+      <h3>Live Ride Tracking</h3>
+      <p id="riderLocation">Waiting for trip to start...</p>
+      <button id="startTripBtn">Start Trip</button>
+      <button id="endTripBtn" class="hidden">End Trip</button>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 SafeMove by Unique Innovators Team | Code Queen Cohort 14</p>
+  </footer>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

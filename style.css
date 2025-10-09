@@ -1,0 +1,268 @@
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #fffaf2;
+  color: #222;
+}
+
+header {
+  background-color: #d4af37;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+
+header h1 {
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1.2rem;
+}
+
+nav a {
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+nav a:hover, .active {
+  color: #222;
+  background: #fff;
+  padding: 5px 10px;
+  border-radius: 8px;
+}
+
+.hero {
+  text-align: center;
+  padding: 5rem 2rem;
+  background: linear-gradient(to bottom, #fff8e1, #fff);
+}
+
+.hero h2 {
+  font-size: 2rem;
+  color: #1b1b1b;
+}
+
+.hero p {
+  max-width: 600px;
+  margin: 1rem auto;
+  color: #444;
+}
+
+button {
+  background-color: #d4af37;
+  border: none;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background-color: #b9962d;
+}
+
+.features {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  padding: 3rem 1rem;
+}
+
+.feature-card {
+  background-color: white;
+  border-radius: 15px;
+  padding: 1.5rem;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  text-align: center;
+  width: 250px;
+}
+
+footer {
+  background: #1b1b1b;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+}
+
+@media (max-width: 600px) {
+  .features {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+
+
+
+.dashboard {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.ride-actions {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.sos {
+  background-color: #ff4c4c;
+}
+
+.sos:hover {
+  background-color: #d43f3f;
+}
+
+.trip-box {
+  margin-top: 2rem;
+  background: white;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  padding: 1.5rem;
+  border-radius: 15px;
+  max-width: 350px;
+  margin-inline: auto;
+}
+
+.hidden {
+  display: none;
+}
+
+#ratingBox {
+  margin-top: 2rem;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 15px;
+  max-width: 300px;
+  margin-inline: auto;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+}
+
+.stars span {
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.report-section, .feedback-section {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 15px;
+  margin-top: 1.5rem;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+  max-width: 400px;
+  margin-inline: auto;
+  text-align: left;
+}
+
+.report-section textarea,
+.feedback-section textarea {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 0.8rem;
+  font-family: inherit;
+  margin-bottom: 1rem;
+}
+
+.report-section button,
+.feedback-section button {
+  background: #f5c542;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.report-section button:hover,
+.feedback-section button:hover {
+  background: #e4b730;
+}
+
+
+
+.driver-status {
+  margin-top: 2rem;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 15px;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+  max-width: 350px;
+  margin-inline: auto;
+}
+
+.safety-tips {
+  margin-top: 2rem;
+  text-align: left;
+  max-width: 400px;
+  margin-inline: auto;
+  background: #f8f8f8;
+  padding: 1.5rem;
+  border-radius: 15px;
+}
+
+.safety-tips ul {
+  padding-left: 1.5rem;
+  list-style: disc;
+  color: #444;
+}
+
+.safety-tips li {
+  margin-bottom: 0.5rem;
+}
+
+
+
+.admin-panels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.panel {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 15px;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+}
+
+.list li {
+  background: #fafafa;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 0.8rem;
+  border-left: 4px solid #f5c542;
+}
+
+.list li button {
+  background: #f5c542;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.list li button:hover {
+  background: #e4b730;
+}
