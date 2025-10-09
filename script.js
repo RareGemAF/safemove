@@ -397,3 +397,81 @@ if(clearData){
     }
   });
 }
+
+
+
+
+/* ---------- RIDER BOOKING & TRIP LOGIC ---------- */
+const requestRideBtn = document.getElementById("requestRide");
+const rideDetails = document.getElementById("rideDetails");
+const ridePickup = document.getElementById("ridePickup");
+const rideDropoff = document.getElementById("rideDropoff");
+const assignedDriver = document.getElementById("assignedDriver");
+const startRideBtn = document.getElementById("startRideBtn");
+const endRideBtn = document.getElementById("endRideBtn");
+
+if(requestRideBtn){
+  requestRideBtn.addEventListener("click", () => {
+    const pickup = document.getElementById("pickupLocation").value.trim();
+    const dropoff = document.getElementById("dropoffLocation").value.trim();
+    if(!pickup || !dropoff) return alert("Please enter both pickup and drop-off locations.");
+
+    // Assign driver (demo: pick random from localStorage)
+    let drivers = JSON.parse(localStorage.getItem("drivers") || "[]");
+    if(drivers.length === 0) return alert("No drivers online yet. Try again later.");
+    const driver = drivers[Math.floor(Math.random() * drivers.length)];
+
+    // Save ride details
+    const ride = { pickup, dropoff, driver: driver.name };
+    localStorage.setItem("currentRide", JSON.stringify(ride));
+
+    // Show ride details
+    ridePickup.textContent = pickup;
+    rideDropoff.textContent = dropoff;
+    assignedDriver.textContent = driver.name;
+
+    // Hide booking form
+    document.querySelector(".ride-booking").classList.add("hidden");
+    rideDetails.classList.remove("hidden");
+
+    alert(`✅ Ride assigned to ${driver.name}`);
+  });
+}
+
+// Start Ride
+if(startRideBtn){
+  startRideBtn.addEventListener("click", () => {
+    rideDetails.classList.add("hidden");
+    const tripTracking = document.createElement("div");
+    tripTracking.id = "tripTracking";
+    tripTracking.classList.add("dashboard");
+    tripTracking.innerHTML = `
+      <h3>Trip In Progress 🚦</h3>
+      <p id="riderTripStatus">🟢 Ride started. Tracking location...</p>
+      <button id="tripSOS" class="sos">🚨 SOS</button>
+    `;
+    document.querySelector("#riderDashboard").appendChild(tripTracking);
+
+    // SOS button inside trip
+    document.getElementById("tripSOS").addEventListener("click", () => {
+      alert("🚨 Rider SOS Activated!");
+      let sosAlerts = JSON.parse(localStorage.getItem("sosAlerts") || "[]");
+      sosAlerts.push("Rider activated SOS!");
+      localStorage.setItem("sosAlerts", JSON.stringify(sosAlerts));
+    });
+
+    endRideBtn.classList.remove("hidden");
+  });
+}
+
+// End Ride
+if(endRideBtn){
+  endRideBtn.addEventListener("click", () => {
+    rideDetails.classList.add("hidden");
+    document.querySelector(".ride-booking").classList.remove("hidden");
+    alert("✅ Ride completed. Thank you for riding safely!");
+    localStorage.removeItem("currentRide");
+    const tripDiv = document.getElementById("tripTracking");
+    if(tripDiv) tripDiv.remove();
+  });
+}
