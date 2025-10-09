@@ -328,3 +328,11 @@ if (toggleStatusBtn) {
       : "🚗 You are now OFFLINE.");
   });
 }
+
+
+const hamburger = document.getElementById("hamburger");
+const navLinks = document.getElementById("nav-links");
+
+hamburger.addEventListener("click", () => {
+  navLinks.classList.toggle("active");
+});
