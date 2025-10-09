@@ -59,12 +59,19 @@
   </div>
 
   <!-- Ride Booking Section -->
-  <div class="ride-booking">
-    <h3>Request a Ride 🚗</h3>
-    <input type="text" id="pickupLocation" placeholder="Pickup Location">
-    <input type="text" id="dropoffLocation" placeholder="Drop-off Location">
-    <button id="requestRide">Request Ride</button>
-  </div>
+<div class="ride-booking">
+  <h3>Request a Ride 🚗 🛵</h3>
+  <input type="text" id="pickupLocation" placeholder="Pickup Location">
+  <input type="text" id="dropoffLocation" placeholder="Drop-off Location">
+  
+  <label for="vehicleType">Choose Vehicle:</label>
+  <select id="vehicleType">
+    <option value="car">Car 🚗</option>
+    <option value="boda">Boda 🛵</option>
+  </select>
+
+  <button id="requestRide">Request Ride</button>
+</div>
 
   <!-- Ride Details & Tracking -->
   <div id="rideDetails" class="hidden">
@@ -75,6 +82,16 @@
     <button id="startRideBtn">Start Ride</button>
     <button id="endRideBtn" class="hidden">End Ride</button>
   </div>
+
+  <!-- Assigned Ride Section -->
+<div id="rideAssignments" class="dashboard hidden">
+  <h2>Assigned Ride 🛣️</h2>
+  <p><strong>Pickup:</strong> <span id="driverPickup"></span></p>
+  <p><strong>Drop-off:</strong> <span id="driverDropoff"></span></p>
+  <p><strong>Passenger:</strong> <span id="ridePassenger"></span></p>
+  <button id="driverStartRideBtn">Start Ride</button>
+  <button id="driverEndRideBtn" class="hidden">End Ride</button>
+</div>
 </section>
   </main>
 

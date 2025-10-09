@@ -475,3 +475,46 @@ if(endRideBtn){
     if(tripDiv) tripDiv.remove();
   });
 }
+
+
+
+
+/* ---------- DRIVER ASSIGNED RIDE LOGIC ---------- */
+const rideAssignments = document.getElementById("rideAssignments");
+const driverPickup = document.getElementById("driverPickup");
+const driverDropoff = document.getElementById("driverDropoff");
+const ridePassenger = document.getElementById("ridePassenger");
+const driverStartRideBtn = document.getElementById("driverStartRideBtn");
+const driverEndRideBtn = document.getElementById("driverEndRideBtn");
+
+// Check for new ride assignments every 1s (simulate real-time)
+setInterval(() => {
+  const currentRide = JSON.parse(localStorage.getItem("currentRide") || "null");
+  if(currentRide){
+    rideAssignments.classList.remove("hidden");
+    driverPickup.textContent = currentRide.pickup;
+    driverDropoff.textContent = currentRide.dropoff;
+    ridePassenger.textContent = "Rider"; // Demo, can use rider name
+  } else {
+    rideAssignments.classList.add("hidden");
+  }
+}, 1000);
+
+// Start Ride
+if(driverStartRideBtn){
+  driverStartRideBtn.addEventListener("click", () => {
+    alert("🚗 Ride started!");
+    driverStartRideBtn.classList.add("hidden");
+    driverEndRideBtn.classList.remove("hidden");
+  });
+}
+
+// End Ride
+if(driverEndRideBtn){
+  driverEndRideBtn.addEventListener("click", () => {
+    alert("✅ Ride completed!");
+    driverEndRideBtn.classList.add("hidden");
+    driverStartRideBtn.classList.remove("hidden");
+    localStorage.removeItem("currentRide");
+  });
+};
