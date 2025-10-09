@@ -402,81 +402,148 @@ if(clearData){
 
 
 /* ---------- RIDER BOOKING & TRIP LOGIC ---------- */
-const requestRideBtn = document.getElementById("requestRide");
-const rideDetails = document.getElementById("rideDetails");
-const ridePickup = document.getElementById("ridePickup");
-const rideDropoff = document.getElementById("rideDropoff");
-const assignedDriver = document.getElementById("assignedDriver");
-const startRideBtn = document.getElementById("startRideBtn");
-const endRideBtn = document.getElementById("endRideBtn");
+document.addEventListener("DOMContentLoaded", () => {
+  // --- Elements ---
+  const riderRegistration = document.getElementById("riderRegistration");
+  const riderLogin = document.getElementById("riderLogin");
+  const riderDashboard = document.getElementById("riderDashboard");
 
-if(requestRideBtn){
-  requestRideBtn.addEventListener("click", () => {
-    const pickup = document.getElementById("pickupLocation").value.trim();
-    const dropoff = document.getElementById("dropoffLocation").value.trim();
-    if(!pickup || !dropoff) return alert("Please enter both pickup and drop-off locations.");
+  const riderName = document.getElementById("riderName");
+  const riderEmail = document.getElementById("riderEmail");
+  const riderPhone = document.getElementById("riderPhone");
+  const registerRider = document.getElementById("registerRider");
 
-    // Assign driver (demo: pick random from localStorage)
-    let drivers = JSON.parse(localStorage.getItem("drivers") || "[]");
-    if(drivers.length === 0) return alert("No drivers online yet. Try again later.");
-    const driver = drivers[Math.floor(Math.random() * drivers.length)];
+  const riderLoginPhone = document.getElementById("riderLoginPhone");
+  const riderLoginCode = document.getElementById("riderLoginCode");
+  const loginRider = document.getElementById("loginRider");
 
-    // Save ride details
-    const ride = { pickup, dropoff, driver: driver.name };
-    localStorage.setItem("currentRide", JSON.stringify(ride));
+  const showLogin = document.getElementById("showLogin");
+  const showRegister = document.getElementById("showRegister");
 
-    // Show ride details
-    ridePickup.textContent = pickup;
-    rideDropoff.textContent = dropoff;
-    assignedDriver.textContent = driver.name;
+  const requestRideBtn = document.getElementById("requestRideBtn");
+  const vehicleType = document.getElementById("vehicleType");
+  const rideStatus = document.getElementById("rideStatus");
 
-    // Hide booking form
-    document.querySelector(".ride-booking").classList.add("hidden");
-    rideDetails.classList.remove("hidden");
+  const submitReport = document.getElementById("submitReport");
+  const reportInput = document.getElementById("reportInput");
+  const submitFeedback = document.getElementById("submitFeedback");
+  const feedbackInput = document.getElementById("feedbackInput");
 
-    alert(`✅ Ride assigned to ${driver.name}`);
-  });
-}
+  // --- Storage ---
+  let riders = JSON.parse(localStorage.getItem("riders") || "[]");
+  let demoDrivers = [
+    { name: "John", vehicle: "car" },
+    { name: "Mary", vehicle: "boda" },
+    { name: "David", vehicle: "car" },
+    { name: "Grace", vehicle: "boda" }
+  ];
+  localStorage.setItem("drivers", JSON.stringify(demoDrivers));
 
-// Start Ride
-if(startRideBtn){
-  startRideBtn.addEventListener("click", () => {
-    rideDetails.classList.add("hidden");
-    const tripTracking = document.createElement("div");
-    tripTracking.id = "tripTracking";
-    tripTracking.classList.add("dashboard");
-    tripTracking.innerHTML = `
-      <h3>Trip In Progress 🚦</h3>
-      <p id="riderTripStatus">🟢 Ride started. Tracking location...</p>
-      <button id="tripSOS" class="sos">🚨 SOS</button>
-    `;
-    document.querySelector("#riderDashboard").appendChild(tripTracking);
+  // --- Helper Functions ---
+  function showDashboard(rider) {
+    riderRegistration.classList.add("hidden");
+    riderLogin.classList.add("hidden");
+    riderDashboard.classList.remove("hidden");
+    document.querySelector("#riderDashboard h2").textContent = `Welcome, ${rider.name} 🧍‍♀️`;
+  }
 
-    // SOS button inside trip
-    document.getElementById("tripSOS").addEventListener("click", () => {
-      alert("🚨 Rider SOS Activated!");
-      let sosAlerts = JSON.parse(localStorage.getItem("sosAlerts") || "[]");
-      sosAlerts.push("Rider activated SOS!");
-      localStorage.setItem("sosAlerts", JSON.stringify(sosAlerts));
+  function generateCode() {
+    return Math.floor(1000 + Math.random() * 9000); // 4-digit code
+  }
+
+  // --- Toggle Forms ---
+  if (showLogin) {
+    showLogin.addEventListener("click", () => {
+      riderRegistration.classList.add("hidden");
+      riderLogin.classList.remove("hidden");
     });
+  }
+  if (showRegister) {
+    showRegister.addEventListener("click", () => {
+      riderLogin.classList.add("hidden");
+      riderRegistration.classList.remove("hidden");
+    });
+  }
 
-    endRideBtn.classList.remove("hidden");
-  });
-}
+  // --- Rider Registration ---
+  if (registerRider) {
+    registerRider.addEventListener("click", () => {
+      const name = riderName.value.trim();
+      const email = riderEmail.value.trim();
+      const phone = riderPhone.value.trim();
+      if (!name || !email || !phone) return alert("Please fill all fields.");
 
-// End Ride
-if(endRideBtn){
-  endRideBtn.addEventListener("click", () => {
-    rideDetails.classList.add("hidden");
-    document.querySelector(".ride-booking").classList.remove("hidden");
-    alert("✅ Ride completed. Thank you for riding safely!");
-    localStorage.removeItem("currentRide");
-    const tripDiv = document.getElementById("tripTracking");
-    if(tripDiv) tripDiv.remove();
-  });
-}
+      // Check if already registered
+      if (riders.find(r => r.phone === phone)) return alert("Phone number already registered.");
 
+      const code = generateCode();
+      const newRider = { name, email, phone, code };
+      riders.push(newRider);
+      localStorage.setItem("riders", JSON.stringify(riders));
 
+      alert(`Registered! Your verification code is: ${code}`);
+      riderRegistration.classList.add("hidden");
+      riderLogin.classList.remove("hidden");
+      riderLoginPhone.value = phone;
+      riderLoginCode.value = "";
+    });
+  }
+
+  // --- Rider Login ---
+  if (loginRider) {
+    loginRider.addEventListener("click", () => {
+      const phone = riderLoginPhone.value.trim();
+      const code = riderLoginCode.value.trim();
+      const rider = riders.find(r => r.phone === phone && r.code == code);
+      if (!rider) return alert("Invalid phone or code.");
+      showDashboard(rider);
+    });
+  }
+
+  // --- Ride Request ---
+  if (requestRideBtn) {
+    requestRideBtn.addEventListener("click", () => {
+      const vehicle = vehicleType.value;
+      let drivers = JSON.parse(localStorage.getItem("drivers") || "[]");
+      const availableDriver = drivers.find(d => d.vehicle === vehicle);
+      if (!availableDriver) {
+        rideStatus.textContent = `No ${vehicle} drivers available now.`;
+        return;
+      }
+      const currentRide = {
+        driver: availableDriver.name,
+        vehicle: availableDriver.vehicle,
+        status: "assigned"
+      };
+      localStorage.setItem("currentRide", JSON.stringify(currentRide));
+      rideStatus.textContent = `Driver ${availableDriver.name} (${availableDriver.vehicle}) is on the way!`;
+    });
+  }
+
+  // --- Report & Feedback ---
+  if (submitReport) {
+    submitReport.addEventListener("click", () => {
+      const text = reportInput.value.trim();
+      if (!text) return alert("Please describe the incident.");
+      const reports = JSON.parse(localStorage.getItem("incidentReports") || "[]");
+      reports.push(text);
+      localStorage.setItem("incidentReports", JSON.stringify(reports));
+      reportInput.value = "";
+      alert("Incident report submitted!");
+    });
+  }
+  if (submitFeedback) {
+    submitFeedback.addEventListener("click", () => {
+      const text = feedbackInput.value.trim();
+      if (!text) return alert("Please enter feedback.");
+      const feedbacks = JSON.parse(localStorage.getItem("userFeedbacks") || "[]");
+      feedbacks.push(text);
+      localStorage.setItem("userFeedbacks", JSON.stringify(feedbacks));
+      feedbackInput.value = "";
+      alert("Feedback submitted!");
+    });
+  }
+});
 
 
 /* ---------- DRIVER ASSIGNED RIDE LOGIC ---------- */
@@ -518,3 +585,371 @@ if(driverEndRideBtn){
     localStorage.removeItem("currentRide");
   });
 };
+
+
+
+requestRideBtn.addEventListener("click", () => {
+  const pickup = document.getElementById("pickupLocation").value.trim();
+  const dropoff = document.getElementById("dropoffLocation").value.trim();
+  const vehicle = document.getElementById("vehicleType").value; // new
+  if(!pickup || !dropoff) return alert("Please enter both pickup and drop-off locations.");
+
+  // Assign driver of the selected type
+  let drivers = JSON.parse(localStorage.getItem("drivers") || "[]");
+  // Filter drivers by vehicle type
+  let availableDrivers = drivers.filter(d => d.vehicle === vehicle);
+  if(availableDrivers.length === 0) return alert(`No ${vehicle} drivers online yet. Try again later.`);
+  
+  const driver = availableDrivers[Math.floor(Math.random() * availableDrivers.length)];
+
+  // Save ride details
+  const ride = { pickup, dropoff, driver: driver.name, vehicle };
+  localStorage.setItem("currentRide", JSON.stringify(ride));
+
+  // Show ride details
+  ridePickup.textContent = pickup;
+  rideDropoff.textContent = dropoff;
+  assignedDriver.textContent = `${driver.name} (${vehicle})`;
+
+  document.querySelector(".ride-booking").classList.add("hidden");
+  rideDetails.classList.remove("hidden");
+
+  alert(`✅ Ride assigned to ${driver.name} (${vehicle})`);
+});
+
+
+// Example: Setup drivers
+const demoDrivers = [
+  { name: "John", vehicle: "car" },
+  { name: "Mary", vehicle: "boda" },
+  { name: "David", vehicle: "car" },
+  { name: "Grace", vehicle: "boda" }
+];
+localStorage.setItem("drivers", JSON.stringify(demoDrivers));
+
+
+
+
+// --- Ride Request Logic ---
+document.addEventListener("DOMContentLoaded", () => {
+  const requestRideBtn = document.getElementById("requestRideBtn");
+  const vehicleType = document.getElementById("vehicleType");
+  const rideStatus = document.getElementById("rideStatus");
+
+  // Load drivers
+  let drivers = JSON.parse(localStorage.getItem("drivers") || "[]");
+
+  // Function to assign ride
+  function assignRide(vehicle) {
+    const availableDriver = drivers.find(d => d.vehicle === vehicle);
+    if (!availableDriver) {
+      rideStatus.textContent = `No ${vehicle} drivers are available right now.`;
+      return null;
+    }
+
+    const currentRide = {
+      driver: availableDriver.name,
+      vehicle: availableDriver.vehicle,
+      status: "assigned"
+    };
+    localStorage.setItem("currentRide", JSON.stringify(currentRide));
+
+    rideStatus.textContent = `Driver ${availableDriver.name} (${availableDriver.vehicle}) is on the way!`;
+    return currentRide;
+  }
+
+  // Event listener
+  if (requestRideBtn) {
+    requestRideBtn.addEventListener("click", () => {
+      const vehicle = vehicleType.value;
+      assignRide(vehicle);
+    });
+  }
+});
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  // --- DRIVER ELEMENTS ---
+  const driverStatusText = document.getElementById("driverStatus");
+  const toggleStatusBtn = document.getElementById("toggleStatus");
+  const rideAssignments = document.getElementById("rideAssignments");
+  const startRideBtn = document.getElementById("startRideBtn");
+  const endRideBtn = document.getElementById("endRideBtn");
+  const driverTripStatus = document.getElementById("driverTripStatus");
+  const driverLocation = document.getElementById("driverLocation");
+
+  // --- Initialize driver status ---
+  let isOnline = false;
+  let currentRide = JSON.parse(localStorage.getItem("currentRide") || "null");
+
+  // --- Toggle Online/Offline ---
+  if (toggleStatusBtn) {
+    toggleStatusBtn.addEventListener("click", () => {
+      isOnline = !isOnline;
+      driverStatusText.textContent = isOnline ? "Online" : "Offline";
+      toggleStatusBtn.textContent = isOnline ? "Go Offline" : "Go Online";
+
+      // Show ride assignment if a ride exists
+      if (isOnline && currentRide) {
+        rideAssignments.classList.remove("hidden");
+      } else {
+        rideAssignments.classList.add("hidden");
+      }
+    });
+  }
+
+  // --- Start Ride ---
+  if (startRideBtn) {
+    startRideBtn.addEventListener("click", () => {
+      if (!currentRide) return alert("No ride assigned yet.");
+      rideAssignments.classList.add("hidden");
+      driverTripStatus.classList.remove("hidden");
+      driverLocation.textContent = `Trip started with ${currentRide.vehicle} for passenger ${currentRide.driver}`;
+      currentRide.status = "in progress";
+      localStorage.setItem("currentRide", JSON.stringify(currentRide));
+    });
+  }
+
+  // --- End Ride ---
+  if (endRideBtn) {
+    endRideBtn.addEventListener("click", () => {
+      if (!currentRide) return;
+      driverTripStatus.classList.add("hidden");
+      alert(`Trip ended successfully with ${currentRide.vehicle}`);
+      localStorage.removeItem("currentRide");
+      currentRide = null;
+      // If online, show rideAssignments ready for next ride
+      if (isOnline) rideAssignments.classList.add("hidden");
+      driverLocation.textContent = "";
+    });
+  }
+});
+
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  /*** --- RIDER ELEMENTS --- ***/
+  const riderDashboard = document.getElementById("riderDashboard");
+  const requestRideBtn = document.getElementById("requestRideBtn");
+  const vehicleType = document.getElementById("vehicleType");
+  const rideStatus = document.getElementById("rideStatus");
+
+  /*** --- DRIVER ELEMENTS --- ***/
+  const driverStatusText = document.getElementById("driverStatus");
+  const toggleStatusBtn = document.getElementById("toggleStatus");
+  const rideAssignments = document.getElementById("rideAssignments");
+  const startRideBtn = document.getElementById("startRideBtn");
+  const endRideBtn = document.getElementById("endRideBtn");
+  const driverTripStatus = document.getElementById("driverTripStatus");
+  const driverLocation = document.getElementById("driverLocation");
+
+  /*** --- INITIAL DATA --- ***/
+  let demoDrivers = [
+    { name: "John", vehicle: "car", online: false },
+    { name: "Mary", vehicle: "boda", online: false },
+    { name: "David", vehicle: "car", online: false },
+    { name: "Grace", vehicle: "boda", online: false }
+  ];
+  localStorage.setItem("drivers", JSON.stringify(demoDrivers));
+
+  /*** --- RIDER: Request Ride --- ***/
+  if (requestRideBtn) {
+    requestRideBtn.addEventListener("click", () => {
+      const vehicle = vehicleType.value;
+      let drivers = JSON.parse(localStorage.getItem("drivers") || "[]");
+
+      // Find available online driver of selected type
+      const availableDriver = drivers.find(d => d.vehicle === vehicle && d.online);
+      if (!availableDriver) {
+        rideStatus.textContent = `No ${vehicle} drivers online now.`;
+        return;
+      }
+
+      const currentRide = {
+        driver: availableDriver.name,
+        vehicle: availableDriver.vehicle,
+        status: "assigned",
+        rider: "You"
+      };
+      localStorage.setItem("currentRide", JSON.stringify(currentRide));
+      rideStatus.textContent = `Driver ${availableDriver.name} (${availableDriver.vehicle}) is on the way!`;
+
+      // Notify driver dashboard by updating storage (driver will pick this up)
+      localStorage.setItem("rideUpdate", Date.now());
+    });
+  }
+
+  /*** --- DRIVER: Online/Offline Toggle --- ***/
+  if (toggleStatusBtn) {
+    toggleStatusBtn.addEventListener("click", () => {
+      let drivers = JSON.parse(localStorage.getItem("drivers") || "[]");
+      const driverName = toggleStatusBtn.dataset.driver; // assign driver's name in HTML as data-driver
+      const driver = drivers.find(d => d.name === driverName);
+      driver.online = !driver.online;
+      driverStatusText.textContent = driver.online ? "Online" : "Offline";
+      toggleStatusBtn.textContent = driver.online ? "Go Offline" : "Go Online";
+      localStorage.setItem("drivers", JSON.stringify(drivers));
+      updateRideAssignment(driverName);
+    });
+  }
+
+  /*** --- DRIVER: Show Assigned Ride --- ***/
+  function updateRideAssignment(driverName) {
+    let currentRide = JSON.parse(localStorage.getItem("currentRide") || "null");
+    if (!currentRide || currentRide.driver !== driverName) {
+      if (rideAssignments) rideAssignments.classList.add("hidden");
+      return;
+    }
+    if (rideAssignments) rideAssignments.classList.remove("hidden");
+    if (startRideBtn) startRideBtn.textContent = "Start Ride";
+    if (driverTripStatus) driverTripStatus.classList.add("hidden");
+  }
+
+  /*** --- DRIVER: Start Ride --- ***/
+  if (startRideBtn) {
+    startRideBtn.addEventListener("click", () => {
+      let currentRide = JSON.parse(localStorage.getItem("currentRide") || "null");
+      if (!currentRide) return alert("No ride assigned yet.");
+      rideAssignments.classList.add("hidden");
+      driverTripStatus.classList.remove("hidden");
+      driverLocation.textContent = `Trip started with ${currentRide.vehicle} for ${currentRide.rider}`;
+      currentRide.status = "in progress";
+      localStorage.setItem("currentRide", JSON.stringify(currentRide));
+
+      // Notify rider
+      localStorage.setItem("rideUpdate", Date.now());
+    });
+  }
+
+  /*** --- DRIVER: End Ride --- ***/
+  if (endRideBtn) {
+    endRideBtn.addEventListener("click", () => {
+      let currentRide = JSON.parse(localStorage.getItem("currentRide") || "null");
+      if (!currentRide) return;
+      driverTripStatus.classList.add("hidden");
+      alert(`Trip ended with ${currentRide.vehicle}`);
+      localStorage.removeItem("currentRide");
+
+      // Notify rider
+      rideStatus.textContent = "Trip completed!";
+      localStorage.setItem("rideUpdate", Date.now());
+    });
+  }
+
+  /*** --- RIDE UPDATE LISTENER (Rider side) --- ***/
+  if (rideStatus) {
+    window.addEventListener("storage", (e) => {
+      if (e.key === "rideUpdate") {
+        let currentRide = JSON.parse(localStorage.getItem("currentRide") || "null");
+        if (!currentRide) {
+          rideStatus.textContent = "No active ride.";
+        } else if (currentRide.status === "assigned") {
+          rideStatus.textContent = `Driver ${currentRide.driver} (${currentRide.vehicle}) is on the way!`;
+        } else if (currentRide.status === "in progress") {
+          rideStatus.textContent = `Trip in progress with ${currentRide.driver} (${currentRide.vehicle})`;
+        }
+      }
+    });
+  }
+});
+
+  /*** --- COMMON ELEMENTS --- ***/
+  const sosBtn = document.getElementById("sosBtn");
+  const driverSOSBtn = document.getElementById("driverSOS");
+  const reportInput = document.getElementById("reportInput");
+  const submitReport = document.getElementById("submitReport");
+  const feedbackInput = document.getElementById("feedbackInput");
+  const submitFeedback = document.getElementById("submitFeedback");
+
+  /*** --- ADMIN ELEMENTS --- ***/
+  const sosList = document.getElementById("sosList");
+  const reportList = document.getElementById("reportList");
+  const feedbackList = document.getElementById("feedbackList");
+
+  /*** --- HELPER FUNCTION: ADD TO LOCALSTORAGE ARRAY --- ***/
+  function addToLocalStorageArray(key, value) {
+    const arr = JSON.parse(localStorage.getItem(key) || "[]");
+    arr.push(value);
+    localStorage.setItem(key, JSON.stringify(arr));
+  }
+
+  /*** --- RIDER SOS --- ***/
+  if (sosBtn) {
+    sosBtn.addEventListener("click", () => {
+      const sos = `🚨 Rider SOS triggered at ${new Date().toLocaleTimeString()}`;
+      addToLocalStorageArray("sosAlerts", sos);
+      alert("✅ SOS sent! Help is on the way.");
+      localStorage.setItem("sosUpdate", Date.now());
+    });
+  }
+
+  /*** --- DRIVER SOS --- ***/
+  if (driverSOSBtn) {
+    driverSOSBtn.addEventListener("click", () => {
+      const sos = `🚨 Driver SOS triggered at ${new Date().toLocaleTimeString()}`;
+      addToLocalStorageArray("sosAlerts", sos);
+      alert("✅ SOS sent! Help is on the way.");
+      localStorage.setItem("sosUpdate", Date.now());
+    });
+  }
+
+  /*** --- INCIDENT REPORT --- ***/
+  if (submitReport) {
+    submitReport.addEventListener("click", () => {
+      const text = reportInput.value.trim();
+      if (!text) return alert("Please describe the incident before submitting.");
+      addToLocalStorageArray("incidentReports", text);
+      reportInput.value = "";
+      alert("✅ Incident report submitted successfully!");
+      localStorage.setItem("reportUpdate", Date.now());
+    });
+  }
+
+  /*** --- FEEDBACK --- ***/
+  if (submitFeedback) {
+    submitFeedback.addEventListener("click", () => {
+      const text = feedbackInput.value.trim();
+      if (!text) return alert("Please enter feedback first.");
+      addToLocalStorageArray("userFeedbacks", text);
+      feedbackInput.value = "";
+      alert("🌟 Thank you for your feedback!");
+      localStorage.setItem("feedbackUpdate", Date.now());
+    });
+  }
+
+  /*** --- ADMIN DASHBOARD: Real-time Updates --- ***/
+  function loadAdminData() {
+    const sosAlerts = JSON.parse(localStorage.getItem("sosAlerts") || "[]");
+    const reports = JSON.parse(localStorage.getItem("incidentReports") || "[]");
+    const feedbacks = JSON.parse(localStorage.getItem("userFeedbacks") || "[]");
+
+    if (sosList) {
+      sosList.innerHTML = sosAlerts.length
+        ? sosAlerts.map(s => `<li>${s}</li>`).join("")
+        : "<li class='empty'>No SOS alerts yet.</li>";
+    }
+
+    if (reportList) {
+      reportList.innerHTML = reports.length
+        ? reports.map(r => `<li>${r}</li>`).join("")
+        : "<li class='empty'>No incident reports yet.</li>";
+    }
+
+    if (feedbackList) {
+      feedbackList.innerHTML = feedbacks.length
+        ? feedbacks.map(f => `<li>${f}</li>`).join("")
+        : "<li class='empty'>No feedback yet.</li>";
+    }
+  }
+
+  // Initial load
+  loadAdminData();
+
+  // Listen for updates from Rider/Driver
+  window.addEventListener("storage", (e) => {
+    if (["sosUpdate", "reportUpdate", "feedbackUpdate"].includes(e.key)) {
+      loadAdminData();
+    }
+  });
