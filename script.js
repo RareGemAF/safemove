@@ -339,3 +339,266 @@ hamburger.addEventListener("click", () => {
 
 
 
+/*** === RIDE ASSIGNMENT AND STATUS === ***/
+
+// When a rider requests a ride
+if (document.getElementById("requestRideBtn")) {
+  document.getElementById("requestRideBtn").addEventListener("click", () => {
+    const pickup = document.getElementById("pickupLocation").value.trim();
+    const dropoff = document.getElementById("dropoffLocation").value.trim();
+    const vehicleType = document.getElementById("vehicleType").value;
+
+    if (!pickup || !dropoff) {
+      alert("Please enter both pickup and drop-off locations.");
+      return;
+    }
+
+    // Get available drivers
+    const drivers = JSON.parse(localStorage.getItem("drivers") || "[]");
+    const availableDriver = drivers.find(d => d.vehicle === vehicleType && d.online);
+
+    if (!availableDriver) {
+      alert(`No ${vehicleType} drivers available at the moment.`);
+      return;
+    }
+
+const rideRequest = {
+  id: Date.now(),
+  riderName: rider.name,
+  pickup,
+  dropoff,
+  fare: fare,
+  driverId: assignedDriver.id,
+  driverName: assignedDriver.name,
+  status: "assigned" // new
+};
+
+localStorage.setItem("assignedRide", JSON.stringify(rideRequest));
+
+    const ride = {
+      rider: localStorage.getItem("loggedInRider"),
+      driver: availableDriver.name,
+      pickup,
+      dropoff,
+      vehicle: vehicleType,
+      status: "assigned"
+    };
+
+    localStorage.setItem("activeRide", JSON.stringify(ride));
+    alert(`✅ Ride assigned to ${availableDriver.name}!`);
+
+    // Notify both dashboards
+    localStorage.setItem("rideUpdate", Date.now());
+  });
+}
+
+// Show ride details on Rider Dashboard
+if (document.getElementById("rideDetails")) {
+  function loadRiderRide() {
+    const ride = JSON.parse(localStorage.getItem("activeRide") || "null");
+    if (!ride || ride.status === "ended") return;
+
+    document.getElementById("ridePickup").textContent = ride.pickup;
+    document.getElementById("rideDropoff").textContent = ride.dropoff;
+    document.getElementById("assignedDriver").textContent = ride.driver;
+    document.getElementById("rideDetails").classList.remove("hidden");
+  }
+  loadRiderRide();
+
+  window.addEventListener("storage", e => {
+    if (e.key === "rideUpdate") loadRiderRide();
+  });
+}
+
+// Show assigned ride on Driver Dashboard
+if (document.getElementById("rideAssignments")) {
+  function loadDriverRide() {
+    const ride = JSON.parse(localStorage.getItem("activeRide") || "null");
+    if (!ride || ride.status === "ended") return;
+
+    const driverName = localStorage.getItem("loggedInDriver");
+    if (ride.driver !== driverName) return;
+
+    document.getElementById("driverPickup").textContent = ride.pickup;
+    document.getElementById("driverDropoff").textContent = ride.dropoff;
+    document.getElementById("ridePassenger").textContent = ride.rider;
+    document.getElementById("rideAssignments").classList.remove("hidden");
+  }
+  loadDriverRide();
+
+  window.addEventListener("storage", e => {
+    if (e.key === "rideUpdate") loadDriverRide();
+  });
+}
+
+// Driver starts and ends ride
+const startBtn = document.getElementById("driverStartRideBtn");
+const endBtn = document.getElementById("driverEndRideBtn");
+
+if (startBtn) {
+  startBtn.addEventListener("click", () => {
+    const ride = JSON.parse(localStorage.getItem("activeRide"));
+    if (!ride) return;
+    ride.status = "in-progress";
+    localStorage.setItem("assignedRide", JSON.stringify(ride));
+    startFareTracker();
+startMapSimulation();
+    localStorage.setItem("rideUpdate", Date.now());
+    alert("🚘 Ride started!");
+    startBtn.classList.add("hidden");
+    endBtn.classList.remove("hidden");
+  });
+}
+
+if (endBtn) {
+  endBtn.addEventListener("click", () => {
+    const ride = JSON.parse(localStorage.getItem("activeRide"));
+    if (!ride) return;
+    ride.status = "ended";
+    localStorage.setItem("assignedRide", JSON.stringify(ride));
+    stopFareTracker();
+    localStorage.setItem("rideUpdate", Date.now());
+    alert("✅ Ride ended successfully!");
+    endBtn.classList.add("hidden");
+  });
+}
+
+
+
+/*** === LIVE RIDE STATUS SYNC === ***/
+function syncRideStatus() {
+  const ride = JSON.parse(localStorage.getItem("activeRide") || "null");
+  if (!ride) return;
+
+  // Rider side update
+  const rideStatusText = document.getElementById("rideStatusText");
+  if (rideStatusText) {
+    if (ride.status === "assigned") rideStatusText.textContent = "Driver on the way 🚗";
+    else if (ride.status === "in-progress") rideStatusText.textContent = "Ride in progress ⏱️";
+    else if (ride.status === "ended") rideStatusText.textContent = "Ride completed ✅";
+  }
+
+  // Driver side update
+  const startBtn = document.getElementById("driverStartRideBtn");
+  const endBtn = document.getElementById("driverEndRideBtn");
+  if (startBtn && endBtn) {
+    if (ride.status === "assigned") {
+      startBtn.classList.remove("hidden");
+      endBtn.classList.add("hidden");
+    } else if (ride.status === "in-progress") {
+      startBtn.classList.add("hidden");
+      endBtn.classList.remove("hidden");
+    } else if (ride.status === "ended") {
+      startBtn.classList.add("hidden");
+      endBtn.classList.add("hidden");
+    }
+  }
+}
+
+// Live listen to localStorage changes
+window.addEventListener("storage", e => {
+  if (e.key === "rideUpdate" || e.key === "activeRide") {
+    syncRideStatus();
+  }
+});
+
+// Run once on page load
+document.addEventListener("DOMContentLoaded", syncRideStatus);
+
+
+
+
+// ==================== RIDE SYNC SYSTEM ====================
+
+function syncRideStatus() {
+  const ride = JSON.parse(localStorage.getItem("assignedRide"));
+  const currentPage = window.location.pathname;
+
+  if (!ride) return;
+
+  // === Rider Side ===
+  if (currentPage.includes("rider.html")) {
+    const status = document.getElementById("rideStatusText");
+    if (!status) return;
+
+    if (ride.status === "assigned") status.textContent = "🚗 Driver is coming...";
+    if (ride.status === "in-progress") status.textContent = "🚘 Ride in progress...";
+    if (ride.status === "completed") status.textContent = "✅ Ride completed. Thank you!";
+  }
+
+  // === Driver Side ===
+  if (currentPage.includes("driver.html")) {
+    const status = document.getElementById("status");
+    if (!status) return;
+
+    if (ride.status === "assigned") status.textContent = "✅ New Ride Assigned!";
+    if (ride.status === "in-progress") status.textContent = "🚘 Ride in Progress...";
+    if (ride.status === "completed") {
+      status.textContent = "🏁 Ride Completed!";
+      localStorage.removeItem("assignedRide");
+      setTimeout(() => {
+        status.textContent = "🚗 Waiting for ride requests...";
+      }, 3000);
+    }
+  }
+}
+
+// Keep both sides synced every 2 seconds
+setInterval(syncRideStatus, 2000);
+
+
+// ================== MAP SIMULATION ==================
+function startMapSimulation() {
+  const map = document.getElementById("rideMap");
+  const dot = document.getElementById("vehicleDot");
+  const label = document.getElementById("mapLabel");
+  if (!map || !dot) return;
+
+  map.classList.remove("hidden");
+  label.textContent = "🚗 Ride in progress...";
+
+  // Animate the dot moving
+  dot.style.animation = "moveDot 12s linear forwards";
+
+  // After a few seconds, finish ride
+  setTimeout(() => {
+    label.textContent = "✅ Ride completed!";
+    dot.style.background = "green";
+  }, 12000);
+}
+
+// Trigger animation when ride starts
+setInterval(() => {
+  const ride = JSON.parse(localStorage.getItem("assignedRide"));
+  if (!ride) return;
+
+  if (ride.status === "in-progress") startMapSimulation();
+}, 2000);
+
+
+
+
+// ================== LIVE FARE TRACKER ==================
+let fareInterval;
+let currentFare = 0;
+
+function startFareTracker() {
+  const fareDisplay = document.getElementById("fareAmount");
+  if (!fareDisplay) return;
+
+  currentFare = 1000; // starting fare
+  fareDisplay.textContent = currentFare.toLocaleString();
+
+  fareInterval = setInterval(() => {
+    currentFare += Math.floor(Math.random() * 200) + 100; // add UGX 100–300 every few seconds
+    fareDisplay.textContent = currentFare.toLocaleString();
+  }, 2000);
+}
+
+function stopFareTracker() {
+  clearInterval(fareInterval);
+  const fareDisplay = document.getElementById("fareAmount");
+  if (fareDisplay) {
+    fareDisplay.textContent = currentFare.toLocaleString() + " (Final)";
+  }
+}

@@ -1,3 +1,111 @@
+/* ====== GENERAL ====== */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #fdfaf6;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+header, footer {
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 1rem 2rem;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 1.5rem;
+  color: #b2884f; /* luxury gold */
+}
+
+/* ====== NAVIGATION ====== */
+nav ul {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0;
+}
+
+nav ul li {
+  margin: 0 1rem;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+nav ul li a:hover {
+  color: #b2884f;
+}
+
+/* ====== DASHBOARD CARDS ====== */
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem;
+}
+
+.form-box, .report-section, .feedback-section, .ride-booking, .driver-status, .trip-box {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.form-box:hover, .report-section:hover, .feedback-section:hover, .ride-booking:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+}
+
+/* ====== BUTTONS ====== */
+button {
+  background: #b2884f;
+  color: #fff;
+  padding: 0.7rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+button:hover {
+  background: #d1a758;
+  transform: translateY(-2px);
+}
+
+/* ====== INPUTS ====== */
+input, textarea, select {
+  width: 100%;
+  padding: 0.7rem;
+  margin: 0.5rem 0 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+}
+
+/* ====== MOBILE RESPONSIVE ====== */
+@media (max-width: 768px) {
+  nav ul {
+    flex-direction: column;
+  }
+
+  .dashboard {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+}
+
+
+
+
 body {
   margin: 0;
   font-family: 'Poppins', sans-serif;
@@ -416,6 +524,43 @@ textarea { resize: vertical; }
   }
 }
 
+
+/* ====== MAP SIMULATION STYLE ====== */
+.map-container {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  transition: 0.3s ease;
+}
+
+#mapLine {
+  position: relative;
+  height: 6px;
+  background: #ccc;
+  border-radius: 6px;
+  margin: 20px auto;
+  width: 90%;
+}
+
+#vehicleDot {
+  position: absolute;
+  top: -6px;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  background: #0078ff;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #0078ff;
+  transition: left 1s linear;
+}
+
+@keyframes moveDot {
+  from { left: 0%; }
+  to { left: 90%; }
+}
 
 
 

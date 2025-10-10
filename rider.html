@@ -31,7 +31,7 @@
   <main>
     <!-- Registration Form -->
     <div id="riderRegistration" class="form-box">
-      <h2>Rider Registration</h2>
+      <h2>Passenger Registration</h2>
       <input type="text" id="riderName" placeholder="Full Name" />
       <input type="email" id="riderEmail" placeholder="Email" />
       <input type="tel" id="riderPhone" placeholder="Phone Number +256 700 000000" />
@@ -50,11 +50,13 @@
 
     <!-- Rider Dashboard -->
 <section id="riderDashboard" class="dashboard hidden">
+  <div class="card sos-card"></div>
   <h2>Welcome, Rider 🧍‍♀️</h2>
   <p>Your safety is our priority. Use the tools below to stay protected and connected.</p>
 
   <!-- SOS Button -->
   <button id="sosBtn" class="sos">🚨 Emergency SOS</button>
+</div>
 
   <!-- Report Incident Section -->
   <div class="report-section">
@@ -83,10 +85,20 @@
   </select>
 
   <!-- Move status text OUTSIDE the select -->
-  <p id="rideStatus"></p>
+  <p id="rideStatusText">No active rides.</p>
 
   <button id="requestRideBtn">Request Ride</button>
 </div>
+</section>
+
+<!-- ====== MAP SIMULATION AREA ====== -->
+<section id="rideMap" class="map-container hidden">
+  <h3>📍 Ride Route</h3>
+  <div id="mapLine">
+    <div id="vehicleDot"></div>
+  </div>
+  <p id="mapLabel">Waiting for ride to start...</p>
+</section>
 
   <!-- Ride Details & Tracking -->
   <div id="rideDetails" class="hidden">
@@ -107,6 +119,23 @@
   <button id="driverStartRideBtn">Start Ride</button>
   <button id="driverEndRideBtn" class="hidden">End Ride</button>
 </div>
+
+
+
+<div id="rideDetails" class="ride-box hidden">
+  <h3>🚘 Ride Details</h3>
+  <p><strong>Pickup:</strong> <span id="ridePickup">—</span></p>
+  <p><strong>Drop-off:</strong> <span id="rideDropoff">—</span></p>
+  <p><strong>Driver:</strong> <span id="assignedDriver">—</span></p>
+  <p><strong>Fare:</strong> UGX <span id="fareAmount">0</span></p>
+  <p><strong>Status:</strong> <span id="rideStatusText">Waiting for driver...</span></p>
+<button id="startRideBtn">Start Ride</button>
+<button id="endRideBtn" class="hidden">End Ride</button>
+
+</div>
+
+
+
 </section>
   </main>
 

@@ -59,13 +59,14 @@
         <button id="toggleStatus">Go Online</button>
       </div>
 
-      <div id="rideAssignments" class="hidden">
-        <h3>Assigned Ride</h3>
-        <p><strong>Pickup:</strong> Makerere University</p>
-        <p><strong>Drop-off:</strong> Nakawa</p>
-        <p><strong>Passenger:</strong> Jane Doe</p>
-        <button id="startRideBtn">Start Ride</button>
-      </div>
+      <div id="rideAssignments" class="ride-box hidden">
+  <h3>🧍 Assigned Ride</h3>
+  <p><strong>Pickup:</strong> <span id="driverPickup">—</span></p>
+  <p><strong>Drop-off:</strong> <span id="driverDropoff">—</span></p>
+  <p><strong>Passenger:</strong> <span id="ridePassenger">—</span></p>
+  <button id="driverStartRideBtn">🚘 Start Ride</button>
+  <button id="driverEndRideBtn" class="hidden">✅ End Ride</button>
+</div>
 
       <div id="driverTripStatus" class="trip-box hidden">
         <h3>Trip in Progress</h3>
