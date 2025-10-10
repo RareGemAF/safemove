@@ -626,35 +626,39 @@ function syncRideStatus() {
 setInterval(syncRideStatus, 2000);
 
 
-// ================== MAP SIMULATION ==================
-function startMapSimulation() {
-  const map = document.getElementById("rideMap");
-  const dot = document.getElementById("vehicleDot");
-  const label = document.getElementById("mapLabel");
-  if (!map || !dot) return;
+// --- Map Route Simulation ---
+function simulateMapRoute(vehicleType) {
+  const driverMarker = document.querySelector(".marker.driver");
+  const driverLocation = document.getElementById("driverLocation");
 
-  map.classList.remove("hidden");
-  label.textContent = "🚗 Ride in progress...";
+  // Choose the marker icon based on vehicle
+  driverMarker.textContent = vehicleType === "boda" ? "🛵 Driver" : "🚗 Driver";
+  driverMarker.style.left = "10%"; // start at pickup
+  driverLocation.textContent = "Trip starting...";
 
-  // Animate the dot moving
-  dot.style.animation = "moveDot 12s linear forwards";
-
-  // After a few seconds, finish ride
-  setTimeout(() => {
-    label.textContent = "✅ Ride completed!";
-    dot.style.background = "green";
-  }, 12000);
+  let progress = 0;
+  const interval = setInterval(() => {
+    progress += 5; // adjust speed
+    driverMarker.style.left = `${10 + 80 * (progress / 100)}%`;
+    driverLocation.textContent = `Trip progress: ${progress}%`;
+    if (progress >= 100) {
+      clearInterval(interval);
+      driverLocation.textContent = "Arrived at drop-off! 🏁";
+    }
+  }, 500);
 }
 
-// Trigger animation when ride starts
-setInterval(() => {
-  const ride = JSON.parse(localStorage.getItem("assignedRide"));
-  if (!ride) return;
+// --- Start Ride Button ---
+document.getElementById("startRideBtn").addEventListener("click", () => {
+  const ride = JSON.parse(localStorage.getItem("currentRide") || "null");
+  if (!ride) return alert("No ride assigned.");
+  document.getElementById("driverTripStatus").classList.remove("hidden");
 
-  if (ride.status === "in-progress") startMapSimulation();
-}, 2000);
+  simulateMapRoute(ride.vehicle); // dynamically use 🚗 or 🛵
 
-
+  ride.status = "in progress";
+  localStorage.setItem("currentRide", JSON.stringify(ride));
+});
 
 
 // ================== LIVE FARE TRACKER ==================
@@ -681,3 +685,4 @@ function stopFareTracker() {
     fareDisplay.textContent = currentFare.toLocaleString() + " (Final)";
   }
 }
+

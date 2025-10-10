@@ -51,7 +51,7 @@
 
     <!-- Driver Dashboard -->
     <section id="driverDashboard" class="dashboard hidden">
-      <h2>Welcome, Driver 🚗</h2>
+      <h2>Welcome, Driver 🚗 🛵</h2>
       <p>Ensure safety for yourself and passengers by staying connected and alert.</p>
 
       <div class="card ride-assignments" id="rideAssignments">
@@ -63,10 +63,14 @@
   <button id="driverEndRideBtn" class="hidden">End Ride</button>
 </div>
 
-<div class="card trip-box hidden" id="driverTripStatus">
-  <h3>Trip in Progress 🛵</h3>
+<div id="driverTripStatus" class="trip-box hidden">
+  <h3>Trip in Progress</h3>
   <p id="driverLocation">Getting location...</p>
-  <div id="mapSimulation" style="height:150px; background:#eee; border-radius:8px; display:flex; align-items:center; justify-content:center;">Map simulation</div>
+  <div id="mapSimulation" class="map-simulation">
+    <div class="marker pickup">📍 Pickup</div>
+    <div class="marker driver">🚗 Driver</div>
+    <div class="marker dropoff">🏁 Drop-off</div>
+  <button id="endRideBtn">End Ride</button>
 </div>
 
       <div class="safety-tips">
