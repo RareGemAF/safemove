@@ -408,10 +408,14 @@ textarea { resize: vertical; }
     top: 60px;
     right: 10px;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #004aad;
     border-radius: 5px;
   }
   #nav-links.active {
     display: flex;
   }
 }
+
+
+
+
