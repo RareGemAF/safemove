@@ -54,25 +54,20 @@
       <h2>Welcome, Driver 🚗</h2>
       <p>Ensure safety for yourself and passengers by staying connected and alert.</p>
 
-      <div class="driver-status">
-        <h3>Status: <span id="driverStatus">Offline</span></h3>
-        <button id="toggleStatus">Go Online</button>
-      </div>
-
-      <div id="rideAssignments" class="ride-box hidden">
-  <h3>🧍 Assigned Ride</h3>
-  <p><strong>Pickup:</strong> <span id="driverPickup">—</span></p>
-  <p><strong>Drop-off:</strong> <span id="driverDropoff">—</span></p>
-  <p><strong>Passenger:</strong> <span id="ridePassenger">—</span></p>
-  <button id="driverStartRideBtn">🚘 Start Ride</button>
-  <button id="driverEndRideBtn" class="hidden">✅ End Ride</button>
+      <div class="card ride-assignments" id="rideAssignments">
+  <h3>Assigned Ride 🛣️</h3>
+  <p><strong>Pickup:</strong> <span id="driverPickup"></span></p>
+  <p><strong>Drop-off:</strong> <span id="driverDropoff"></span></p>
+  <p><strong>Passenger:</strong> <span id="ridePassenger"></span></p>
+  <button id="driverStartRideBtn">Start Ride</button>
+  <button id="driverEndRideBtn" class="hidden">End Ride</button>
 </div>
 
-      <div id="driverTripStatus" class="trip-box hidden">
-        <h3>Trip in Progress</h3>
-        <p id="driverLocation">Getting location...</p>
-        <button id="endRideBtn">End Ride</button>
-      </div>
+<div class="card trip-box hidden" id="driverTripStatus">
+  <h3>Trip in Progress 🛵</h3>
+  <p id="driverLocation">Getting location...</p>
+  <div id="mapSimulation" style="height:150px; background:#eee; border-radius:8px; display:flex; align-items:center; justify-content:center;">Map simulation</div>
+</div>
 
       <div class="safety-tips">
         <h3>Safety Tips 🛡️</h3>

@@ -463,6 +463,85 @@ if (endBtn) {
   });
 }
 
+const rideAssignments = document.getElementById("rideAssignments");
+const driverPickup = document.getElementById("driverPickup");
+const driverDropoff = document.getElementById("driverDropoff");
+const ridePassenger = document.getElementById("ridePassenger");
+const driverStartRideBtn = document.getElementById("driverStartRideBtn");
+const driverEndRideBtn = document.getElementById("driverEndRideBtn");
+const driverTripStatus = document.getElementById("driverTripStatus");
+const driverLocation = document.getElementById("driverLocation");
+const mapSimulation = document.getElementById("mapSimulation");
+
+function loadAssignedRide() {
+  const ride = JSON.parse(localStorage.getItem("currentRide") || "null");
+  if (!ride) {
+    rideAssignments.classList.add("hidden");
+    return;
+  }
+  rideAssignments.classList.remove("hidden");
+  driverPickup.textContent = ride.pickup || "Unknown";
+  driverDropoff.textContent = ride.dropoff || "Unknown";
+  ridePassenger.textContent = ride.rider || "Unknown";
+
+  if (ride.status === "in progress") {
+    driverStartRideBtn.classList.add("hidden");
+    driverEndRideBtn.classList.remove("hidden");
+    driverTripStatus.classList.remove("hidden");
+    driverLocation.textContent = `Trip started with ${ride.vehicle} for ${ride.rider}`;
+  } else {
+    driverStartRideBtn.classList.remove("hidden");
+    driverEndRideBtn.classList.add("hidden");
+    driverTripStatus.classList.add("hidden");
+  }
+}
+
+if (driverStartRideBtn) {
+  driverStartRideBtn.addEventListener("click", () => {
+    const ride = JSON.parse(localStorage.getItem("currentRide") || "null");
+    if (!ride) return alert("No ride assigned.");
+    ride.status = "in progress";
+    localStorage.setItem("currentRide", JSON.stringify(ride));
+
+    driverStartRideBtn.classList.add("hidden");
+    driverEndRideBtn.classList.remove("hidden");
+    driverTripStatus.classList.remove("hidden");
+    driverLocation.textContent = `Trip started with ${ride.vehicle} for ${ride.rider}`;
+    simulateMapRoute();
+  });
+}
+
+if (driverEndRideBtn) {
+  driverEndRideBtn.addEventListener("click", () => {
+    const ride = JSON.parse(localStorage.getItem("currentRide") || "null");
+    if (!ride) return alert("No ride in progress.");
+    ride.status = "completed";
+    localStorage.setItem("currentRide", JSON.stringify(ride));
+
+    driverStartRideBtn.classList.remove("hidden");
+    driverEndRideBtn.classList.add("hidden");
+    driverTripStatus.classList.add("hidden");
+    alert("✅ Ride completed!");
+  });
+}
+
+// Simple Map Simulation
+function simulateMapRoute() {
+  let progress = 0;
+  mapSimulation.textContent = "Driving...";
+  const interval = setInterval(() => {
+    progress += 10;
+    mapSimulation.textContent = `Trip progress: ${progress}%`;
+    if (progress >= 100) {
+      clearInterval(interval);
+      mapSimulation.textContent = "Arrived at drop-off! 🏁";
+    }
+  }, 1000);
+}
+
+// Load assigned ride on page load
+loadAssignedRide();
+
 
 
 /*** === LIVE RIDE STATUS SYNC === ***/
