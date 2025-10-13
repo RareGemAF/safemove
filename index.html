@@ -1,58 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SafeMove | Smart & Safe Transport</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SafeMove | Passenger Portal</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <header>
-    <h1>SafeMove</h1>
-    <header>
 
-  <nav>
-    <div class="hamburger" id="hamburger">&#9776;
-       <span></span>
-    <span></span>
-    <span></span>
+  <!-- Splash Screen -->
+  <div id="splash-screen">
+    <div class="splash-content">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSymv6o8FDjl_790MeqY5wYa73doG63sfirvw&s" alt="SafeMove Logo" class="logo">
+      <h1 class="splash-title">SafeMove</h1>
+      <div class="tagline">Safe, Smart, and Trusted Rides.</div>
     </div>
-    <ul id="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="rider.html">Passenger</a></li>
-      <li><a href="driver.html">Driver</a></li>
-      <li><a href="admin.html">Admin</a></li>
-    </ul>
-  </nav>
-  <div id="overlay"></div>
-</header>
-  </header>
+  </div>
 
-  <section class="hero">
-    <h2>Redefining Safe Mobility for Everyone</h2>
-    <p>Connecting riders, drivers, and communities in one trusted ecosystem, because every journey matters.</p>
-    <button id="getStarted" onclick="location.href='rider.html'">Get Started</button>
-  </section>
+  <!-- Auth Section -->
+  <div id="auth-container" class="hidden">
+    <div class="auth-box">
+      <!-- Login Form -->
+      <form id="login-form" class="active">
+        <label for="login-email">Email</label>
+        <input id="login-email" type="email" placeholder="flo@gmail.com" required>
 
-  <section class="features">
-    <div class="feature-card">
-      <h3>🚨 SOS Safety</h3>
-      <p>Instant emergency alert to authorities and trusted contacts.</p>
+        <label for="login-password">Password</label>
+        <input id="login-password" type="password" placeholder="********" required>
+
+        <button type="submit">Login</button>
+        <p class="switch-form">Don't have an account? <span id="show-signup">Register here</span></p>
+      </form>
+
+      <!-- Signup Form -->
+      <form id="signup-form">
+        <label for="signup-name">Full Name</label>
+        <input id="signup-name" type="text" placeholder="Florence Pretty" required>
+
+        <label for="signup-email">Email</label>
+        <input id="signup-email" type="email" placeholder="florence@example.com" required>
+
+        <label for="signup-password">Password</label>
+        <input id="signup-password" type="password" placeholder="********" required>
+
+        <label for="signup-confirm-password">Confirm Password</label>
+        <input id="signup-confirm-password" type="password" placeholder="********" required>
+
+        <button type="submit">Sign Up</button>
+        <p class="switch-form">Already have an account? <span id="show-login">Login here</span></p>
+      </form>
     </div>
-    <div class="feature-card">
-      <h3>🧭 Real-Time Tracking</h3>
-      <p>Track your trip safely with location awareness.</p>
-    </div>
-    <div class="feature-card">
-      <h3>⭐ Ratings & Trust</h3>
-      <p>Transparent feedback and accountability for every trip.</p>
-    </div>
-  </section>
+  </div>
 
-  <footer>
-    <p>© 2025 SafeMove by Unique Innovators Team | Code Queen Cohort 14</p>
-  </footer>
-
-  <script src="script.js"></script>
+  <script src="js/landing.js"></script>
 </body>
 </html>

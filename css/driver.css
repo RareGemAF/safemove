@@ -1,0 +1,677 @@
+/* === Global Styles === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f7fa;
+    color: #1e3a8a;
+}
+
+/* === Sidebar === */
+:root {
+    --sidebar-width: 240px;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background: #1e3a8a;
+    color: white;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+    padding-top: 20px;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-menu li {
+    margin-bottom: 10px;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+    text-decoration: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    transition: background 0.3s;
+}
+
+.sidebar-menu a:hover,
+.sidebar-menu a.active {
+    background: #243b7a;
+}
+
+.sidebar-menu .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-menu .icon svg {
+    width: 20px;
+    height: 20px;
+    fill: white;
+}
+
+/* === Navbar === */
+.navbar {
+    background: white;
+    color: #1e3a8a;
+    padding: 0.4rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: fixed;
+    top: 0;
+    left: var(--sidebar-width);
+    right: 0;
+    z-index: 1000;
+    height: 60px;
+}
+
+.navbar .logo {
+    font-size: 1.2rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.navbar .logo img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.navbar .user-section {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.navbar .user-info {
+    text-align: right;
+}
+
+.navbar .user-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.navbar .user-status {
+    font-size: 0.75rem;
+    opacity: 0.8;
+}
+
+.logout-btn {
+    background: red;
+    border: none;
+    color: white;
+    padding: 0.4rem 1.2rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.logout-btn:hover {
+    background: #c90000;
+    transform: translateY(-2px);
+}
+
+/* === Main Content === */
+.main-content {
+    margin-left: var(--sidebar-width);
+    margin-top: 70px;
+    padding: 2rem;
+    min-height: calc(100vh - 70px);
+}
+
+/* === Sections === */
+.section {
+    display: none;
+    animation: fadeIn 0.3s;
+}
+
+.section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* === Safety Tip === */
+.safety-tip {
+    background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+    padding: 1.5rem;
+    border-radius: 12px;
+    border-left: 5px solid #e17055;
+    margin-bottom: 2rem;
+}
+
+.safety-tip h3 {
+    color: #d63031;
+    margin-bottom: 0.5rem;
+}
+
+/* === Dashboard Header === */
+.dashboard-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.dashboard-header h1 {
+    font-size: 2rem;
+    color: #1e3a8a;
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-header p {
+    font-size: 1rem;
+    color: #1e3a8a;
+}
+
+/* === Stats Cards Horizontal Layout === */
+.stats-grid {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    margin-bottom: 2rem;
+    padding-bottom: 0.5rem;
+}
+
+.stat-card {
+    flex: 0 0 220px;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: transform 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+}
+
+.stat-icon.earnings { background: #667eea; }
+.stat-icon.rides { background: #f093fb; }
+.stat-icon.pending { background: #4facfe; }
+.stat-icon.rating { background: #43e97b; }
+
+.stat-details h3 {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.stat-details .value {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* === Activity & Graph Container === */
+.activity-graph-container {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+/* Recent Activity Card */
+.card.recent-activity {
+    flex: 1 1 400px;
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.card.recent-activity h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.trip-item {
+    margin-bottom: 1rem;
+}
+
+.trip-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+}
+
+.trip-date {
+    color: #888;
+}
+
+.trip-fare {
+    font-weight: bold;
+    color: #43e97b;
+}
+
+/* Graph Card */
+.card.graph-card {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    flex: 1 1 500px;  /* Allow it to grow */
+    min-height: 300px; /* Enough vertical space */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.card.graph-card canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* === Link Styles === */
+a {
+    color: #2563eb;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
+
+/* Navigation Links */
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    color: white;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.sidebar-menu a:hover {
+    background: #2563eb;
+    text-decoration: none;
+}
+
+.sidebar-menu a.active {
+    background: #2563eb;
+    color: white;
+}
+
+/* Button Links */
+a.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+a.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Support Links */
+.support-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    color: white;
+    font-weight: 500;
+}
+
+.support-links a:hover {
+    background: #2563eb;
+    border-radius: 6px;
+    text-decoration: none;
+}
+
+/* === Responsive === */
+@media (max-width: 1024px) {
+    .activity-graph-container { flex-direction: column; }
+    .card.graph-card { min-height: 250px; }
+}
+
+@media (max-width: 768px) {
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.mobile-open { transform: translateX(0); }
+    .navbar { left: 0; }
+    .main-content { margin-left: 0; }
+    .stats-grid { flex-wrap: wrap; justify-content: center; }
+    .activity-graph-container { gap: 1rem; }
+}
+/* === Section Styling === */
+.section {
+    padding: 2rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7fa;
+}
+
+.section h1 {
+    font-size: 2rem;
+    color: #1e3a8a;
+    margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+    color: #555;
+    margin-bottom: 1.5rem;
+}
+
+/* === Table Container === */
+.ride-table-container {
+    overflow-x: auto; /* allows horizontal scroll on small screens */
+}
+
+/* === Table Styling === */
+.ride-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.ride-table th, .ride-table td {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.ride-table thead {
+    background: #3f6582;
+    color: #fff;
+    font-weight: 600;
+}
+
+.ride-table tbody tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+.ride-table tbody tr:hover {
+    background: #e0f0ff;
+    transition: 0.3s;
+}
+
+/* === Action Buttons Styling === */
+.btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+
+.btn-accept {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-accept:hover {
+    background-color: #45a049;
+}
+
+.btn-decline {
+    background-color: #f44336;
+    color: white;
+}
+
+.btn-decline:hover {
+    background-color: #e53935;
+}
+
+/* Arrange buttons horizontally inside Actions column */
+.ride-table td:last-child {
+    display: flex;           /* Arrange buttons in a row */
+    gap: 5px;                /* Space between buttons */
+    justify-content: flex-start; /* Align left */
+    align-items: center;     /* Vertical alignment */
+}
+
+/* === Responsive Styling === */
+@media (max-width: 1024px) {
+    .ride-table th, .ride-table td {
+        font-size: 0.85rem;
+        padding: 10px 8px;
+    }
+}
+/* === Section Styling === */
+.section {
+    padding: 2rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7fa;
+}
+
+.section h1 {
+    font-size: 2rem;
+    color: #1e3a8a;
+    margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+    color: #555;
+    margin-bottom: 1.5rem;
+}
+
+/* === Table Container === */
+.trip-table-container {
+    overflow-x: auto; /* horizontal scroll for smaller screens */
+}
+
+/* === Table Styling === */
+.trip-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.trip-table th, .trip-table td {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.trip-table thead {
+    background: #3f6582;
+    color: #fff;
+    font-weight: 600;
+}
+
+.trip-table tbody tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+.trip-table tbody tr:hover {
+    background: #e0f0ff;
+    transition: 0.3s;
+}
+
+/* === Responsive Styling === */
+@media (max-width: 1024px) {
+    .trip-table th, .trip-table td {
+        font-size: 0.85rem;
+        padding: 10px 8px;
+    }
+}
+/* === Section Styling === */
+.section {
+    padding: 2rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7fa;
+}
+
+.section h1 {
+    font-size: 2rem;
+    color: #1e3a8a;
+    margin-bottom: 0.5rem;
+}
+
+.section p {
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+/* === Card Styling === */
+.card {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #1e3a8a;
+}
+
+/* === Form Groups === */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: 0.2s;
+}
+
+.form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 5px rgba(102, 126, 234, 0.4);
+    outline: none;
+}
+
+/* === File Upload Styling === */
+.file-upload {
+    border: 2px dashed #ccc;
+    border-radius: 6px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s;
+    background-color: #f9f9f9;
+}
+
+.file-upload:hover {
+    border-color: #667eea;
+    background-color: #f0f4ff;
+}
+
+.file-upload p {
+    margin: 0;
+    font-weight: 500;
+    color: #333;
+}
+
+.file-upload small {
+    display: block;
+    margin-top: 5px;
+    color: #888;
+    font-size: 0.85rem;
+}
+
+.file-upload input[type="file"] {
+    display: none;
+}
+
+/* === Buttons === */
+.btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.btn-accept {
+    background-color: #667eea;
+    color: #fff;
+}
+
+.btn-accept:hover {
+    background-color: #556cd6;
+}
+
+/* === Use Current Location Button === */
+.form-group button {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    background-color: #667eea;
+    color: #fff;
+    transition: 0.2s;
+}
+
+.form-group button:hover {
+    background-color: #556cd6;
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+    .card {
+        padding: 1.5rem;
+    }
+    
+    .form-control {
+        font-size: 0.9rem;
+    }
+    
+    .file-upload {
+        padding: 15px;
+    }
+}

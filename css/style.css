@@ -1,0 +1,183 @@
+/* ===== General ===== */
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: 'Poppins', sans-serif;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ===== Splash Screen ===== */
+#splash-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #2563eb, #60a5fa); /* solid blue gradient */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: white;
+  z-index: 1000;
+}
+
+.splash-content {
+  text-align: center;
+  animation: slideIn 1s ease forwards;
+}
+
+.logo {
+  width: 150px;
+  height: 150px;
+  margin-bottom: 20px;
+  animation: logoBounce 1s ease forwards;
+}
+
+.splash-title {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.tagline {
+  font-size: 1.5rem;
+}
+
+/* Animations */
+@keyframes slideIn {
+  0% { transform: translateY(-50px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes logoBounce {
+  0% { transform: scale(0); }
+  60% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* ===== Auth Container ===== */
+.hidden {
+  display: none;
+}
+
+#auth-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeContent 0.5s ease forwards;
+  position: relative;
+  flex-direction: column;
+}
+
+/* ===== Background Image + Overlay only for Auth Section ===== */
+#auth-container::before {
+  content: "";
+  position: fixed; /* cover entire screen */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("https://static.vecteezy.com/system/resources/thumbnails/010/591/051/small_2x/taxi-ordering-service-app-concept-girl-booking-yellow-cab-woman-with-smartphone-order-car-transfer-online-route-and-arrival-address-on-city-map-on-mobile-screen-web-application-get-taxicab-vector.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+  z-index: -2;
+}
+
+#auth-container::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(37, 99, 235, 0.3); /* blue overlay */
+  z-index: -1;
+}
+
+/* ===== Auth Box (Glass) ===== */
+.auth-box {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  width: 350px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== Form Styles ===== */
+.auth-box form {
+  display: none;
+  flex-direction: column;
+}
+
+.auth-box form.active {
+  display: flex;
+}
+
+.auth-box label {
+  display: block;
+  text-align: left;
+  margin: 10px 0 5px 0;
+  font-weight: bold;
+  color: #1e3a8a;
+  font-size: 0.95rem;
+}
+
+.auth-box input[type="text"],
+.auth-box input[type="email"],
+.auth-box input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  margin: 5px 0 15px 0;
+  border-radius: 12px;
+  border: none;
+  outline: none;
+  background: rgba(255, 255, 255, 0.35);
+  color: #000;
+}
+
+.auth-box input::placeholder {
+  color: #555;
+}
+
+.auth-box button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background-color:#2563eb;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.auth-box button:hover {
+  background-color: #1e40af;
+}
+
+.switch-form {
+  margin-top: 15px;
+  font-size: 0.9rem;
+  color: #1e3a8a;
+}
+
+.switch-form span {
+  color: #1e40af;
+  cursor: pointer;
+  font-weight: bold;
+}
