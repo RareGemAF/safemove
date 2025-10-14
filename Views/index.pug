@@ -1,0 +1,43 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title SafeMove | Passenger Portal
+    link(rel="stylesheet", href="/css/style.css")
+  body
+    //- Splash Screen
+    #splash-screen
+      .splash-content
+        img.logo(src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSymv6o8FDjl_790MeqY5wYa73doG63sfirvw&s", alt="SafeMove Logo")
+        h1.splash-title SafeMove
+        .tagline Safe, Smart, and Trusted Rides.
+
+    //- Auth Section
+    #auth-container.hidden
+      .auth-box
+        //- Login Form
+        form#login-form.active(action="/auth/login", method="POST")
+          label(for="login-email") Email
+          input#login-email(name="email", type="email", placeholder="flo@gmail.com", required)
+          label(for="login-password") Password
+          input#login-password(name="password", type="password", placeholder="********", required)
+          button(type="submit") Login
+          p.switch-form Don't have an account? 
+            span#show-signup Register here
+
+        //- Signup Form
+        form#signup-form(action="/auth/signup", method="POST")
+          label(for="signup-name") Full Name
+          input#signup-name(name="name", type="text", placeholder="Florence Pretty", required)
+          label(for="signup-email") Email
+          input#signup-email(name="email", type="email", placeholder="florence@example.com", required)
+          label(for="signup-password") Password
+          input#signup-password(name="password", type="password", placeholder="********", required)
+          label(for="signup-confirm-password") Confirm Password
+          input#signup-confirm-password(name="confirmPassword", type="password", placeholder="********", required)
+          button(type="submit") Sign Up
+          p.switch-form Already have an account? 
+            span#show-login Login here
+
+    script(src="/js/landing.js")

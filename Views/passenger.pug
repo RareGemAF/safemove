@@ -1,0 +1,146 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title SafeMove | Passenger
+    link(rel="stylesheet", href="/css/passenger.css")
+  body
+    .passenger-container
+      .header
+        .header-content
+          .logo
+            img(src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSymv6o8FDjl_790MeqY5wYa73doG63sfirvw&s' alt='SafeMove Logo')
+            span SafeMove Passenger
+          .user-info
+            if user && user.name
+              span Welcome, #{user.name}
+            button.btn-logout(onclick='logout()') Logout
+
+      .main-content
+        .quick-actions
+          .action-card#requestRideCard
+            h3 Request Ride
+            p Book a new ride instantly
+            button.btn-action(onclick="showRideForm()") Book Now
+
+          .action-card#sosCard
+            h3 Emergency SOS
+            p Get immediate help
+            button.btn-sos(onclick="sendSOS()") SOS
+
+          .action-card#rideStatusCard
+            h3 Ride Status
+            p Check current ride status
+            button.btn-action(onclick="checkRideStatus()") Check Status
+
+        if activeRide
+          .card.active-ride
+            .card-header
+              h3 Current Ride
+            .ride-details
+              p From: #{activeRide.pickupLocation.address}
+              p To: #{activeRide.destination.address}
+              p Fare: #{activeRide.fare.toLocaleString()} UGX
+              p Status: 
+                span.status-badge #{activeRide.status}
+              if activeRide.driver
+                p Driver: #{activeRide.driver.name}
+                if activeRide.driver.phone
+                  p Phone: #{activeRide.driver.phone}
+                if activeRide.driver.vehicleType
+                  p Vehicle: #{activeRide.driver.vehicleType}
+              .ride-actions
+                button.btn-secondary(onclick=`cancelRide('${activeRide._id}')`) Cancel Ride
+                button.btn-sos(onclick="sendSOS()") Emergency SOS
+
+        .card.ride-form#rideForm(style="display: none;")
+          .card-header
+            h3 Request a Ride
+          form#requestRideForm
+            .form-group
+              label(for="pickupLocation") Pickup Location
+              input#pickupLocation(type="text" name="pickupLocation" placeholder="Enter pickup address" required)
+            .form-group
+              label(for="destination") Destination
+              input#destination(type="text" name="destination" placeholder="Enter destination address" required)
+            .form-actions
+              button.btn-primary(type="submit") Request Ride
+              button.btn-secondary(type="button" onclick="hideRideForm()") Cancel
+
+        .card
+          .card-header
+            h3 Recent Rides
+          .table-container
+            if rideHistory && rideHistory.length > 0
+              table.ride-table
+                thead
+                  tr
+                    th Date
+                    th From → To
+                    th Fare
+                    th Status
+                    th Actions
+                tbody#rideHistoryTable
+                  each ride in rideHistory
+                    tr
+                      td #{new Date(ride.createdAt).toLocaleDateString()}
+                      td #{ride.pickupLocation.address} → #{ride.destination.address}
+                      td #{ride.fare.toLocaleString()} UGX
+                      td 
+                        span.status-badge.completed Completed
+                      td
+                        button.btn-sm(onclick=`showFeedbackForm('${ride._id}')`) Feedback
+                        button.btn-sm(onclick=`showIncidentForm('${ride._id}')`) Report
+            else
+              p.no-data No ride history yet
+
+        .modal#feedbackModal
+          .modal-content
+            .modal-header
+              h3 Submit Feedback
+              span.close(onclick="closeModal('feedbackModal')") &times;
+            form#feedbackForm
+              input(type="hidden" id="feedbackRideId")
+              .form-group
+                label(for="rating") Rating (1-5 stars)
+                select#rating(name="rating" required)
+                  option(value="") Select Rating
+                  option(value="1") ⭐
+                  option(value="2") ⭐⭐
+                  option(value="3") ⭐⭐⭐
+                  option(value="4") ⭐⭐⭐⭐
+                  option(value="5") ⭐⭐⭐⭐⭐
+              .form-group
+                label(for="feedback") Comments
+                textarea#feedback(name="feedback" placeholder="Share your experience...")
+              .form-actions
+                button.btn-primary(type="submit") Submit Feedback
+                button.btn-secondary(type="button" onclick="closeModal('feedbackModal')") Cancel
+
+        .modal#incidentModal
+          .modal-content
+            .modal-header
+              h3 Report Incident
+              span.close(onclick="closeModal('incidentModal')") &times;
+            form#incidentForm
+              input(type="hidden" id="incidentRideId")
+              .form-group
+                label(for="incidentType") Incident Type
+                select#incidentType(name="incidentType" required)
+                  option(value="") Select Type
+                  option(value="unsafe_driving") Unsafe Driving
+                  option(value="delay") Excessive Delay
+                  option(value="complaint") Driver Complaint
+                  option(value="accident") Accident
+                  option(value="other") Other
+              .form-group
+                label(for="incidentDescription") Description
+                textarea#incidentDescription(name="description" placeholder="Please describe the incident..." required)
+              .form-actions
+                button.btn-primary(type="submit") Report Incident
+                button.btn-secondary(type="button" onclick="closeModal('incidentModal')") Cancel
+
+      #messageContainer
+
+    script(src="/js/passenger.js")

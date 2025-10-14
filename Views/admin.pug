@@ -1,0 +1,172 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    title SafeMove Admin
+    link(rel='stylesheet' href='/css/admin.css')
+    script(src='https://cdn.jsdelivr.net/npm/chart.js')
+  body
+    // SIDEBAR
+    .sidebar
+      h2 SafeMove
+      a#navDashboard.nav-link.active(href='#' data-section='dashboard')
+        svg(viewbox='0 0 24 24')
+          path(d='M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z')
+        | Dashboard
+      a#navIncidents.nav-link(href='#' data-section='incidents')
+        svg(viewbox='0 0 24 24')
+          path(d='M12 2L2 7l10 5 10-5-10-5zm0 18l10-5V9l-10 5-10-5v6l10 5z')
+        | Incidents
+      a#navUsers.nav-link(href='#' data-section='users')
+        svg(viewbox='0 0 24 24')
+          path(d='M12 12c2.67 0 8 1.34 8 4v4H4v-4c0-2.66 5.33-4 8-4zM12 2a4 4 0 110 8 4 4 0 010-8z')
+        | Users
+      a#navAnalytics.nav-link(href='#' data-section='analytics')
+        svg(viewbox='0 0 24 24')
+          path(d='M3 17h2v-7H3v7zm4 0h2V3H7v14zm4 0h2v-4h-2v4zm4 0h2V9h-2v8zm4 0h2V5h-2v12z')
+        | Analytics
+
+    // MAIN CONTENT
+    #adminApp
+      .header
+        .header-content
+          .logo
+            img(src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSymv6o8FDjl_790MeqY5wYa73doG63sfirvw&s' alt='Safe Move Logo')
+            span SafeMove Admin
+          .user-info
+            if user && user.name
+              span Welcome, #{user.name}
+            button.btn-logout(onclick='logout()') Logout
+
+      // DASHBOARD SECTION
+      #adminDashboard.section
+        // REAL STAT CARDS
+        .stats-grid
+          .stat-card
+            .stat-info
+              p.stat-label Active Rides
+              p.stat-value#activeRides 0
+          .stat-card
+            .stat-info
+              p.stat-label Total Users
+              p.stat-value#totalUsers 0
+          .stat-card
+            .stat-info
+              p.stat-label Safety Alerts
+              p.stat-value.alert#safetyAlerts 0
+          .stat-card
+            .stat-info
+              p.stat-label Revenue Today
+              p.stat-value.revenue#revenueToday 0 UGX
+
+        // FORM + GRAPH SIDE BY SIDE
+        .dashboard-grid
+          // ADD NEW DRIVER FORM
+          .card.driver-form-card
+            .card-header 
+              h3 Register New Driver
+            form#addDriverForm.driver-form
+              .form-group
+                label(for='driverName') Full Name *
+                input#driverName(type='text' name='driverName' placeholder='Enter full name' required)
+              .form-group
+                label(for='driverEmail') Email *
+                input#driverEmail(type='email' name='driverEmail' placeholder='Enter email address' required)
+              .form-group
+                label(for='driverPhone') Phone Number *
+                input#driverPhone(type='tel' name='driverPhone' placeholder='+256 XXX XXX XXX' required)
+              .form-group
+                label(for='ninNumber') NIN Number *
+                input#ninNumber(type='text' name='ninNumber' placeholder='Enter NIN number' required)
+              .form-actions
+                button.btn.btn-primary(type='submit') Add Driver
+                button.btn.btn-secondary(type='reset') Clear Form
+            #driverFormMessage
+
+          // REVENUE CHART
+          .card.driver-form-card
+            .card-header 
+              h3 Revenue Analytics (Last 7 Days)
+            .chart-container
+              canvas#revenueChart(height='200')
+
+        // REGISTERED DRIVERS TABLE
+        .card
+          .card-header 
+            h3 Registered Drivers
+            .table-actions
+              button.btn.btn-secondary(onclick='loadDrivers()') Refresh
+          .table-container
+            table.driver-table
+              thead
+                tr
+                  th Name
+                  th Email
+                  th Phone
+                  th NIN
+                  th Status
+                  th Join Date
+              tbody#driversTableBody
+                tr
+                  td(colspan='6' style='text-align: center;') Loading drivers...
+
+      // INCIDENTS SECTION
+      #adminIncidents.section.hidden
+        .card
+          .card-header 
+            h3 Incident Reports
+            .table-actions
+              button.btn.btn-secondary(onclick='loadIncidents()') Refresh
+          .table-container
+            table#incidentTable.incident-table
+              thead
+                tr
+                  th Date
+                  th Type
+                  th Description
+                  th Location
+                  th Delay (mins)
+                  th Severity
+                  th Actions
+              tbody#incidentsTableBody
+                tr
+                  td(colspan='7' style='text-align: center;') Loading incidents...
+
+      // USERS SECTION
+      #adminUsers.section.hidden
+        .card
+          .card-header 
+            h3 User Management
+            .table-actions
+              button.btn.btn-secondary(onclick='loadUsers()') Refresh
+          .table-container
+            table.user-table
+              thead
+                tr
+                  th Name
+                  th Email
+                  th Role
+                  th Status
+                  th Join Date
+                  th Actions
+              tbody#usersTableBody
+                tr
+                  td(colspan='6' style='text-align: center;') Loading users...
+
+      // ANALYTICS SECTION
+      #adminAnalytics.section.hidden
+        .analytics-container
+          .card-header Analytics & Reports
+          .analytics-grid
+            .chart-card
+              .chart-header Rides per Hour
+              canvas#ridesChart
+            .chart-card
+              .chart-header Driver Status
+              canvas#driverChart
+            .chart-card
+              .chart-header Passenger Feedback
+              canvas#feedbackChart
+
+    script(src='/js/admin.js')

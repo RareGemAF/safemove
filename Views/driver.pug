@@ -1,0 +1,171 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    title Driver Dashboard - SafeMove
+    link(rel='stylesheet' href='/css/driver.css')
+    script(src='https://cdn.jsdelivr.net/npm/chart.js')
+  body
+    // Navbar
+    nav.navbar
+      .logo
+        img.logo-img(src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSymv6o8FDjl_790MeqY5wYa73doG63sfirvw&s' alt='SafeMove Logo')
+        span SafeMove Driver
+      .user-section
+        .user-info
+          .user-name Welcome, #{user.name}
+        button.logout-btn(onclick='logout()') Logout
+
+    // Sidebar
+    aside.sidebar
+      ul.sidebar-menu
+        li
+          a.active(href='#dashboard' onclick="showSection('dashboard'); return false;")
+            span.icon
+              svg(viewbox='0 0 24 24' width='20' height='20' fill='currentColor')
+                path(d='M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z')
+            span Dashboard
+        li
+          a(href='#ride-requests' onclick="showSection('ride-requests'); return false;")
+            span.icon
+              svg(viewbox='0 0 24 24' width='20' height='20' fill='currentColor')
+                path(d='M5 11h14l1.5 4h-17L5 11zm3-6h8l1 3H7l1-3zM6 18c0-.55.45-1 1-1s1 .45 1 1-.45 1-1 1-1-.45-1-1zm10 0c0-.55.45-1 1-1s1 .45 1 1-.45 1-1 1-1-.45-1-1z')
+            span Ride Requests
+        li
+          a(href='#trip-history' onclick="showSection('trip-history'); return false;")
+            span.icon
+              svg(viewbox='0 0 24 24' width='20' height='20' fill='currentColor')
+                path(d='M13 3a9 9 0 1 0 9 9h-2a7 7 0 1 1-7-7V3zM12 8v6l4 2 1-1.73-3-1.27V8h-2z')
+            span Trip History
+        li
+          a(href='#incident-report' onclick="showSection('incident-report'); return false;")
+            span.icon
+              svg(viewbox='0 0 24 24' width='20' height='20' fill='currentColor')
+                path(d='M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z')
+            span Incident Report
+
+    // Main Content
+    main.main-content
+      // Dashboard Section
+      section#dashboard.section.active
+        // Safety Tip
+        .safety-tip
+          h3 Safety Tip of the Day
+          p Always verify passenger details before starting a trip. Use in-app navigation for accurate routes and share trip status with trusted contacts.
+
+        // Stats Cards - REAL DATA
+        .stats-grid
+          .stat-card
+            .stat-details
+              h3 Today's Earnings
+              .value#todayEarnings UGX 0
+          .stat-card
+            .stat-details
+              h3 Today's Rides
+              .value#todayRides 0
+          .stat-card
+            .stat-details
+              h3 Pending Requests
+              .value#pendingRequests 0
+          .stat-card
+            .stat-details
+              h3 Performance Rating
+              .value#performanceRating Not rated
+
+        // Recent Activity and Graph
+        .activity-graph-container
+          // Earnings Chart
+          .card.graph-card
+            h2 Earnings Overview (Last 7 Days)
+            canvas#earningsChart(width='400' height='250')
+
+          // Quick Actions
+          .card.recent-activity
+            h2 Quick Actions
+            .action-buttons
+              button.btn.btn-primary(onclick="showSection('ride-requests')") View Ride Requests
+              button.btn.btn-secondary(onclick="refreshDashboard()") Refresh Dashboard
+              button.btn.btn-sos(onclick="showSection('incident-report')") Report Incident
+
+      // Ride Requests Section - REAL DATA
+      section#ride-requests.section
+        h1 Ride Requests
+        p.section-subtitle Accept or decline ride requests from passengers
+        .table-actions
+          button.btn.btn-secondary(onclick='loadRideRequests()') Refresh Requests
+        .ride-table-container
+          table.ride-table
+            thead
+              tr
+                th Passenger
+                th Pickup
+                th Destination
+                th Distance
+                th Fare
+                th Requested
+                th Actions
+            tbody#rideRequestsBody
+              tr
+                td(colspan='7' style='text-align: center;') Loading ride requests...
+
+      // Trip History Section - REAL DATA
+      section#trip-history.section
+        h1 Trip History
+        p.section-subtitle View your completed rides and earnings
+        .table-actions
+          button.btn.btn-secondary(onclick='loadTripHistory()') Refresh History
+        .trip-table-container
+          table.trip-table
+            thead
+              tr
+                th Route
+                th Date & Time
+                th Passenger
+                th Distance
+                th Fare
+                th Rating
+            tbody#tripHistoryBody
+              tr
+                td(colspan='6' style='text-align: center;') Loading trip history...
+
+      // Incident Report Section
+      section#incident-report.section
+        h1 Incident Report
+        p.section-subtitle Report any incidents or safety concerns during your trips
+        .card
+          h2 Submit Incident Report
+          form#incidentForm
+            .form-group
+              label Incident Type
+              select#incidentType.form-control(name='incidentType' required)
+                option(value='') Select incident type...
+                option(value='traffic_accident') Traffic Accident
+                option(value='theft') Theft
+                option(value='passenger_harassment') Passenger Harassment
+                option(value='safety_concern') Safety Concern
+                option(value='vehicle_issue') Vehicle Issue
+                option(value='technical_issue') App/Technical Issue
+                option(value='other') Other
+            .form-group
+              label Description
+              textarea#incidentDescription.form-control(name='description' placeholder='Please describe what happened in detail...' required)
+            .form-group
+              label Location (Optional)
+              input#incidentLocation.form-control(type='text' name='location' placeholder='Enter location where incident occurred')
+            .form-group
+              label Related Ride (Optional)
+              select#relatedRide.form-control(name='rideId')
+                option(value='') Select related ride...
+                // Will be populated with recent rides
+            .form-actions
+              button.btn.btn-primary(type='submit') Submit Incident Report
+              button.btn.btn-secondary(type='button' onclick="showSection('dashboard')") Cancel
+          p.emergency-contact
+            | Emergency? Call support: 
+            strong 125-SAFEMOVE
+
+    // Messages Container
+    #messageContainer
+
+    script(src='/js/driver.js')
