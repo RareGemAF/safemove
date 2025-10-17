@@ -98,23 +98,20 @@ html(lang="en")
                 .mode-option(data-mode="moto" onclick="selectTransportMode('moto')")
                   i.fas.fa-motorcycle
                   span(data-i18n="moto") Moto
-                  span.fare-estimate#motoFare 5,000 UGX
+                
                 .mode-option(data-mode="car" onclick="selectTransportMode('car')")
                   i.fas.fa-car
                   span(data-i18n="car") Car
-                  span.fare-estimate#carFare 10,000 UGX
+                
                 .mode-option(data-mode="taxi" onclick="selectTransportMode('taxi')")
                   i.fas.fa-taxi
                   span(data-i18n="taxi") Taxi
-                  span.fare-estimate#taxiFare 15,000 UGX
+        
                 .mode-option(data-mode="bus" onclick="selectTransportMode('bus')")
                   i.fas.fa-bus
                   span(data-i18n="bus") Bus
-                  span.fare-estimate#busFare 2,000 UGX
+                  
             .form-actions
-              button.btn.btn-primary(onclick="calculateFare()")
-                i.fas.fa-calculator
-                span(data-i18n="calculate_fare") Calculate Fare
               button.btn.btn-success#requestRideBtn(style="display: none;" onclick="requestRide()")
                 i.fas.fa-car
                 span(data-i18n="request_ride") Request Ride
