@@ -220,7 +220,7 @@ EMAIL_PASS=your-16-character-app-password</pre>
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: process.env.EMAIL_USER,
-      subject: 'SafeMove - Email Configuration Test',
+      subject: 'NovaMove - Email Configuration Test',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <div style="background: linear-gradient(135deg, #1e40af 0%, #3730a3 100%); padding: 20px; text-align: center;">

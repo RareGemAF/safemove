@@ -127,16 +127,16 @@ router.post("/add-driver", requireAdmin, async (req, res) => {
     try {
       const transporter = req.app.get('transporter');
       const mailOptions = {
-        from: process.env.EMAIL_USER || 'safemove@yourapp.com',
+        from: process.env.EMAIL_USER || 'novamove2025@gmail.com',
         to: driverEmail,
-        subject: 'Welcome to SafeMove - Driver Account Created',
+        subject: 'Welcome to NovaMove - Driver Account Created',
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <div style="background: linear-gradient(135deg, #1e40af 0%, #3730a3 100%); padding: 20px; text-align: center;">
-              <h1 style="color: white; margin: 0;">SafeMove</h1>
+              <h1 style="color: white; margin: 0;">NovaMove</h1>
             </div>
             <div style="padding: 20px;">
-              <h2 style="color: #1e40af;">Welcome to SafeMove, ${driverName}!</h2>
+              <h2 style="color: #1e40af;">Welcome to NovaMove, ${driverName}!</h2>
               <p>Your driver account has been created successfully and is ready to use.</p>
               
               <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin: 20px 0;">
@@ -164,10 +164,10 @@ router.post("/add-driver", requireAdmin, async (req, res) => {
               
               <p>If you have any questions or need assistance, please contact our support team.</p>
               
-              <p>Best regards,<br><strong>The SafeMove Team</strong></p>
+              <p>Best regards,<br><strong>The NovaMove Team</strong></p>
             </div>
             <div style="background: #f1f5f9; padding: 15px; text-align: center; color: #64748b;">
-              <p style="margin: 0;">© 2024 SafeMove. All rights reserved.</p>
+              <p style="margin: 0;">© 2024 NovaMove. All rights reserved.</p>
             </div>
           </div>
         `

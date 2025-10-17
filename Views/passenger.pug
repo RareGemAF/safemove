@@ -3,144 +3,751 @@ html(lang="en")
   head
     meta(charset="UTF-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
-    title SafeMove | Passenger
+    title NovaMove | Passenger Dashboard
+    link(rel="stylesheet", href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css")
+    link(rel="stylesheet", href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css")
     link(rel="stylesheet", href="/css/passenger.css")
+    script(src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js")
   body
-    .passenger-container
+    // Sidebar
+    .sidebar
+      .sidebar-header
+        img(src='https://via.placeholder.com/40x40/3B82F6/FFFFFF?text=NM' alt='NovaMove Logo')
+        span NovaMove
+      
+      .sidebar-menu
+        .menu-item.active(data-section="dashboard")
+          i.fas.fa-home
+          span(data-i18n="dashboard") Dashboard
+        .menu-item(data-section="availableDrivers")
+          i.fas.fa-car
+          span(data-i18n="available_drivers") Available Drivers
+        .menu-item(data-section="rideHistory")
+          i.fas.fa-history
+          span(data-i18n="ride_history") Ride History
+        .menu-item(data-section="safetyCenter")
+          i.fas.fa-shield-alt
+          span(data-i18n="safety_center") Safety Center
+        .menu-item(data-section="trustedContacts")
+          i.fas.fa-users
+          span(data-i18n="trusted_contacts") Trusted Contacts
+        .menu-item(data-section="verification")
+          i.fas.fa-id-card
+          span(data-i18n="verification") Verification
+        .menu-item(data-section="settings")
+          i.fas.fa-cog
+          span(data-i18n="settings") Settings
+
+    // Social Media Sidebar
+    .social-media-sidebar
+      a.social-icon.facebook(href="https://www.facebook.com/groups/4303641976577780" target="_blank" title="Facebook")
+        i.fab.fa-facebook-f
+      a.social-icon.instagram(href="https://www.instagram.com/novamove2025?utm_source=qr&igsh=MXYyZmZlY2E3Y3gwNg==" target="_blank" title="Instagram")
+        i.fab.fa-instagram
+      a.social-icon.twitter(href="https://x.com/NovaMove2025" target="_blank" title="Twitter")
+        i.fab.fa-twitter
+      a.social-icon.linkedin(href="https://www.linkedin.com/company/nova-move/" target="_blank" title="LinkedIn")
+        i.fab.fa-linkedin-in
+
+    // Language Selector
+    .language-selector
+      select#languageSelect(onchange='changeLanguage(this.value)')
+        option(value="en") English
+        option(value="lg") Luganda
+        option(value="sw") Kiswahili
+        option(value="tt") Rutooro
+        option(value="ny") Runyakore
+
+    // Main Content
+    .main-content
       .header
         .header-content
-          .logo
-            img(src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSymv6o8FDjl_790MeqY5wYa73doG63sfirvw&s' alt='SafeMove Logo')
-            span SafeMove Passenger
-          .user-info
+          h1(data-i18n="passenger_dashboard") Passenger Dashboard
+          p(data-i18n="welcome_message") Welcome back! Your safety is our priority.
+        
+        .user-info
+          .user-avatar= user && user.name ? user.name.charAt(0).toUpperCase() : 'U'
+          .user-details
             if user && user.name
-              span Welcome, #{user.name}
-            button.btn-logout(onclick='logout()') Logout
+              span(data-i18n="welcome_user") Welcome, #{user.name}
+            else
+              span(data-i18n="welcome_user") Welcome, User
+          button.btn-logout(onclick='logout()')
+            i.fas.fa-sign-out-alt
+            span(data-i18n="logout") Logout
 
-      .main-content
-        .quick-actions
-          .action-card#requestRideCard
-            h3 Request Ride
-            p Book a new ride instantly
-            button.btn-action(onclick="showRideForm()") Book Now
-
-          .action-card#sosCard
-            h3 Emergency SOS
-            p Get immediate help
-            button.btn-sos(onclick="sendSOS()") SOS
-
-          .action-card#rideStatusCard
-            h3 Ride Status
-            p Check current ride status
-            button.btn-action(onclick="checkRideStatus()") Check Status
-
-        if activeRide
-          .card.active-ride
+      // Dashboard Section
+      #dashboard.section.active
+        .dashboard-grid
+          // Ride Request Card
+          .card
             .card-header
-              h3 Current Ride
-            .ride-details
-              p From: #{activeRide.pickupLocation.address}
-              p To: #{activeRide.destination.address}
-              p Fare: #{activeRide.fare.toLocaleString()} UGX
-              p Status: 
-                span.status-badge #{activeRide.status}
-              if activeRide.driver
-                p Driver: #{activeRide.driver.name}
-                if activeRide.driver.phone
-                  p Phone: #{activeRide.driver.phone}
-                if activeRide.driver.vehicleType
-                  p Vehicle: #{activeRide.driver.vehicleType}
-              .ride-actions
-                button.btn-secondary(onclick=`cancelRide('${activeRide._id}')`) Cancel Ride
-                button.btn-sos(onclick="sendSOS()") Emergency SOS
-
-        .card.ride-form#rideForm(style="display: none;")
-          .card-header
-            h3 Request a Ride
-          form#requestRideForm
+              h3(data-i18n="request_ride") Request a Ride
+              .card-icon.icon-primary
+                i.fas.fa-car
+            p(data-i18n="get_safe_ride") Get a safe ride to your destination
             .form-group
-              label(for="pickupLocation") Pickup Location
-              input#pickupLocation(type="text" name="pickupLocation" placeholder="Enter pickup address" required)
+              label(for="pickupLocation" data-i18n="pickup_location") Pickup Location
+              input#pickupLocation(type="text" data-i18n="enter_pickup" placeholder="Enter your pickup address" required)
             .form-group
-              label(for="destination") Destination
-              input#destination(type="text" name="destination" placeholder="Enter destination address" required)
+              label(for="destination" data-i18n="destination") Destination
+              input#destination(type="text" data-i18n="enter_destination" placeholder="Enter your destination" required)
+            .form-group
+              label(data-i18n="transport_mode") Transport Mode
+              .transport-modes
+                .mode-option(data-mode="moto" onclick="selectTransportMode('moto')")
+                  i.fas.fa-motorcycle
+                  span(data-i18n="moto") Moto
+                  span.fare-estimate#motoFare 5,000 UGX
+                .mode-option(data-mode="car" onclick="selectTransportMode('car')")
+                  i.fas.fa-car
+                  span(data-i18n="car") Car
+                  span.fare-estimate#carFare 10,000 UGX
+                .mode-option(data-mode="taxi" onclick="selectTransportMode('taxi')")
+                  i.fas.fa-taxi
+                  span(data-i18n="taxi") Taxi
+                  span.fare-estimate#taxiFare 15,000 UGX
+                .mode-option(data-mode="bus" onclick="selectTransportMode('bus')")
+                  i.fas.fa-bus
+                  span(data-i18n="bus") Bus
+                  span.fare-estimate#busFare 2,000 UGX
             .form-actions
-              button.btn-primary(type="submit") Request Ride
-              button.btn-secondary(type="button" onclick="hideRideForm()") Cancel
+              button.btn.btn-primary(onclick="calculateFare()")
+                i.fas.fa-calculator
+                span(data-i18n="calculate_fare") Calculate Fare
+              button.btn.btn-success#requestRideBtn(style="display: none;" onclick="requestRide()")
+                i.fas.fa-car
+                span(data-i18n="request_ride") Request Ride
 
+          // Available Drivers Preview
+          .card
+            .card-header
+              h3(data-i18n="available_drivers") Available Drivers
+              .card-icon.icon-success
+                i.fas.fa-users
+            .drivers-preview#driversPreview
+              .loading-spinner
+                i.fas.fa-spinner.fa-spin
+                span(data-i18n="loading_drivers") Loading available drivers...
+            .view-all-container
+              button.btn.btn-secondary(onclick="showSection('availableDrivers')")
+                i.fas.fa-list
+                span(data-i18n="view_all_drivers") View All Drivers
+
+          // Safety Features Overview
+          .card
+            .card-header
+              h3(data-i18n="safety_features") Safety Features
+              .card-icon.icon-danger
+                i.fas.fa-shield-alt
+            .safety-features
+              .safety-item(onclick="showSOSOptions()")
+                .safety-icon.icon-danger
+                  i.fas.fa-bell
+                span(data-i18n="emergency_sos") Emergency SOS
+              .safety-item(onclick="showSafetyTips()")
+                .safety-icon.icon-warning
+                  i.fas.fa-phone
+                span(data-i18n="in_app_calling") In-App Calling
+              .safety-item(onclick="startSafetyCheckIn()")
+                .safety-icon.icon-success
+                  i.fas.fa-check-double
+                span(data-i18n="safety_checkins") Safety Check-ins
+              .safety-item(onclick="showIncidentForm('text')")
+                .safety-icon.icon-primary
+                  i.fas.fa-flag
+                span(data-i18n="incident_reporting") Incident Reporting
+
+        // Active Ride Section
+        .card.active-ride-section(style="margin-bottom: 24px; display: none;" id="activeRideSection")
+          .card-header
+            h3(data-i18n="current_ride") Current Ride
+            .status-badge#rideStatus
+          .ride-details
+            .detail-grid
+              .detail-item
+                span.label(data-i18n="pickup") Pickup:
+                span.value#activePickup
+              .detail-item
+                span.label(data-i18n="destination") Destination:
+                span.value#activeDestination
+              .detail-item
+                span.label(data-i18n="fare") Fare:
+                span.value#activeFare
+              .detail-item
+                span.label(data-i18n="driver") Driver:
+                span.value#activeDriver
+              .detail-item
+                span.label(data-i18n="vehicle") Vehicle:
+                span.value#activeVehicle
+              .detail-item
+                span.label(data-i18n="plate") Plate:
+                span.value#activePlate
+            .ride-actions
+              button.btn-sos(onclick="showSOSOptions()")
+                i.fas.fa-bell
+                span(data-i18n="emergency_sos") Emergency SOS
+              button.btn.btn-warning(onclick="showPlateScanner()")
+                i.fas.fa-camera
+                span(data-i18n="scan_plate") Scan Plate
+              button.btn.btn-secondary(onclick="cancelRide()")
+                i.fas.fa-times
+                span(data-i18n="cancel_ride") Cancel Ride
+              button.btn.btn-primary(onclick="contactDriver()")
+                i.fas.fa-phone
+                span(data-i18n="call_driver") Call Driver
+
+      // Available Drivers Section
+      #availableDrivers.section
         .card
           .card-header
-            h3 Recent Rides
+            h3(data-i18n="available_drivers") Available Drivers
+            .card-icon.icon-success
+              i.fas.fa-car
+            .header-actions
+              button.btn.btn-secondary(onclick="refreshDrivers()")
+                i.fas.fa-sync
+                span(data-i18n="refresh") Refresh
+              button.btn.btn-primary(onclick="showSection('dashboard')")
+                i.fas.fa-arrow-left
+                span(data-i18n="back_to_dashboard") Back to Dashboard
+          .drivers-grid#driversGrid
+            .loading-spinner
+              i.fas.fa-spinner.fa-spin
+              span(data-i18n="loading_drivers") Loading available drivers...
+
+      // Ride History Section
+      #rideHistory.section
+        .card
+          .card-header
+            h3(data-i18n="ride_history") Ride History
+            .card-icon.icon-primary
+              i.fas.fa-history
           .table-container
-            if rideHistory && rideHistory.length > 0
-              table.ride-table
-                thead
-                  tr
-                    th Date
-                    th From → To
-                    th Fare
-                    th Status
-                    th Actions
-                tbody#rideHistoryTable
-                  each ride in rideHistory
-                    tr
-                      td #{new Date(ride.createdAt).toLocaleDateString()}
-                      td #{ride.pickupLocation.address} → #{ride.destination.address}
-                      td #{ride.fare.toLocaleString()} UGX
-                      td 
-                        span.status-badge.completed Completed
-                      td
-                        button.btn-sm(onclick=`showFeedbackForm('${ride._id}')`) Feedback
-                        button.btn-sm(onclick=`showIncidentForm('${ride._id}')`) Report
-            else
-              p.no-data No ride history yet
+            .table-actions
+              button.btn.btn-secondary(onclick="loadRideHistory()")
+                i.fas.fa-sync
+                span(data-i18n="refresh") Refresh
+            #rideHistoryContent
+              .loading-spinner
+                i.fas.fa-spinner.fa-spin
+                span(data-i18n="loading_history") Loading ride history...
 
-        .modal#feedbackModal
-          .modal-content
-            .modal-header
-              h3 Submit Feedback
-              span.close(onclick="closeModal('feedbackModal')") &times;
-            form#feedbackForm
-              input(type="hidden" id="feedbackRideId")
-              .form-group
-                label(for="rating") Rating (1-5 stars)
-                select#rating(name="rating" required)
-                  option(value="") Select Rating
-                  option(value="1") ⭐
-                  option(value="2") ⭐⭐
-                  option(value="3") ⭐⭐⭐
-                  option(value="4") ⭐⭐⭐⭐
-                  option(value="5") ⭐⭐⭐⭐⭐
-              .form-group
-                label(for="feedback") Comments
-                textarea#feedback(name="feedback" placeholder="Share your experience...")
-              .form-actions
-                button.btn-primary(type="submit") Submit Feedback
-                button.btn-secondary(type="button" onclick="closeModal('feedbackModal')") Cancel
+      // Safety Center Section
+      #safetyCenter.section
+        .dashboard-grid
+          // Emergency SOS
+          .card
+            .card-header
+              h3(data-i18n="emergency_sos") Emergency SOS
+              .card-icon.icon-danger
+                i.fas.fa-bell
+            p(data-i18n="sos_description") In case of emergency, press the SOS button to alert authorities and your trusted contacts
+            .sos-features
+              .sos-option.emergency(onclick="triggerEmergencySOS()")
+                .sos-icon
+                  i.fas.fa-bell
+                .sos-info
+                  span.sos-title(data-i18n="trigger_emergency") Trigger Emergency Alert
+                  span.sos-desc(data-i18n="sos_immediate") Immediate notification to authorities
+              .sos-option.voice(onclick="startVoiceSOSRecording()")
+                .sos-icon
+                  i.fas.fa-microphone
+                .sos-info
+                  span.sos-title(data-i18n="voice_sos") Voice SOS
+                  span.sos-desc(data-i18n="record_voice_alert") Record and send voice alert
+              .sos-option.medical(onclick="triggerMedicalSOS()")
+                .sos-icon
+                  i.fas.fa-plus-square
+                .sos-info
+                  span.sos-title(data-i18n="medical_emergency") Medical Emergency
+                  span.sos-desc(data-i18n="medical_assistance") Request medical assistance
 
-        .modal#incidentModal
-          .modal-content
-            .modal-header
-              h3 Report Incident
-              span.close(onclick="closeModal('incidentModal')") &times;
-            form#incidentForm
-              input(type="hidden" id="incidentRideId")
-              .form-group
-                label(for="incidentType") Incident Type
-                select#incidentType(name="incidentType" required)
-                  option(value="") Select Type
-                  option(value="unsafe_driving") Unsafe Driving
-                  option(value="delay") Excessive Delay
-                  option(value="complaint") Driver Complaint
-                  option(value="accident") Accident
-                  option(value="other") Other
-              .form-group
-                label(for="incidentDescription") Description
-                textarea#incidentDescription(name="description" placeholder="Please describe the incident..." required)
-              .form-actions
-                button.btn-primary(type="submit") Report Incident
-                button.btn-secondary(type="button" onclick="closeModal('incidentModal')") Cancel
+          // Incident Reporting
+          .card
+            .card-header
+              h3(data-i18n="incident_reporting") Incident Reporting
+              .card-icon.icon-warning
+                i.fas.fa-flag
+            p(data-i18n="report_safety_concerns") Report any safety concerns or incidents during your ride
+            .incident-options
+              button.btn.btn-warning(onclick="showIncidentForm('text')")
+                i.fas.fa-edit
+                span(data-i18n="text_report") Text Report
+              button.btn.btn-warning(onclick="showIncidentForm('voice')")
+                i.fas.fa-microphone
+                span(data-i18n="voice_report") Voice Report
+              button.btn.btn-warning(onclick="showIncidentForm('video')")
+                i.fas.fa-video
+                span(data-i18n="video_report") Video Report
 
-      #messageContainer
+          // Safety Check-ins
+          .card
+            .card-header
+              h3(data-i18n="safety_checkins") Safety Check-ins
+              .card-icon.icon-success
+                i.fas.fa-check-double
+            p(data-i18n="safety_checkins_desc") Regular check-ins during your ride to ensure your safety
+            .safety-features
+              .safety-item
+                .safety-icon.icon-success
+                  i.fas.fa-clock
+                span(data-i18n="automatic_checkins") Automatic Check-ins
+              .safety-item
+                .safety-icon.icon-primary
+                  i.fas.fa-users
+                span(data-i18n="notify_contacts") Notify Trusted Contacts
 
+        // Safety Tips
+        .card(style="margin-top: 24px;")
+          .card-header
+            h3(data-i18n="safety_tips") Safety Tips
+            .card-icon.icon-primary
+              i.fas.fa-lightbulb
+          .safety-tips
+            .tip-item
+              i.fas.fa-check-circle.text-success
+              span(data-i18n="verify_driver_details") Always verify driver and vehicle details before entering
+            .tip-item
+              i.fas.fa-check-circle.text-success
+              span(data-i18n="share_ride_details") Share your ride details with trusted contacts
+            .tip-item
+              i.fas.fa-check-circle.text-success
+              span(data-i18n="sit_back_seat") Sit in the back seat for maximum safety
+            .tip-item
+              i.fas.fa-check-circle.text-success
+              span(data-i18n="use_in_app_comms") Use in-app communication instead of personal numbers
+            .tip-item
+              i.fas.fa-check-circle.text-success
+              span(data-i18n="trust_instincts") Trust your instincts - if something feels wrong, cancel the ride
+
+      // Trusted Contacts Section
+      #trustedContacts.section
+        .card
+          .card-header
+            h3(data-i18n="trusted_contacts") Trusted Contacts
+            .card-icon.icon-success
+              i.fas.fa-users
+            .header-actions
+              button.btn.btn-primary(onclick="showAddContactModal()")
+                i.fas.fa-plus
+                span(data-i18n="add_contact") Add Contact
+          p(data-i18n="trusted_contacts_desc") Add people who will be notified in case of emergency
+          .contacts-list#contactsList
+            .loading-spinner
+              i.fas.fa-spinner.fa-spin
+              span(data-i18n="loading_contacts") Loading contacts...
+
+        // Contact Settings
+        .card(style="margin-top: 24px;")
+          .card-header
+            h3(data-i18n="notification_settings") Notification Settings
+            .card-icon.icon-primary
+              i.fas.fa-bell
+          .notification-settings
+            .setting-item
+              label
+                input(type="checkbox" id="notifyStartRide" checked)
+                span(data-i18n="notify_start_ride") Notify contacts when I start a ride
+            .setting-item
+              label
+                input(type="checkbox" id="notifyEmergency" checked)
+                span(data-i18n="notify_emergency") Notify contacts in case of emergency
+            .setting-item
+              label
+                input(type="checkbox" id="notifySafetyCheckin")
+                span(data-i18n="notify_safety_checkin") Notify contacts for safety check-in failures
+          button.btn.btn-primary(onclick="saveNotificationSettings()" style="margin-top: 16px;")
+            i.fas.fa-save
+            span(data-i18n="save_settings") Save Settings
+
+      // Verification Section
+      #verification.section
+        .dashboard-grid
+          // Face Verification
+          .card
+            .card-header
+              h3(data-i18n="face_verification") Face Verification
+              .card-icon.icon-primary
+                i.fas.fa-id-card
+            .verification-status#faceVerificationStatus
+              .status-pending
+                i.fas.fa-clock
+                span(data-i18n="verification_pending") Verification Pending
+            p(data-i18n="face_verification_desc") Verify your identity for enhanced security
+            .verification-actions
+              button.btn.btn-primary(onclick="showFullProfileVerification()")
+                i.fas.fa-user-check
+                span Complete Profile Verification
+              button.btn.btn-primary(onclick="startFaceVerification()")
+                i.fas.fa-camera
+                span(data-i18n="start_verification") Start Verification
+              button.btn.btn-secondary(onclick="retakeFace()")
+                i.fas.fa-redo
+                span(data-i18n="retake_photo") Retake Photo
+
+          // Account Security
+          .card
+            .card-header
+              h3(data-i18n="account_security") Account Security
+              .card-icon.icon-danger
+                i.fas.fa-shield-alt
+            .security-features
+              .security-item
+                i.fas.fa-check-circle.text-success
+                span(data-i18n="two_factor_auth") Two-Factor Authentication
+              .security-item
+                i.fas.fa-check-circle.text-success
+                span(data-i18n="encrypted_data") Encrypted Data
+              .security-item
+                i.fas.fa-check-circle.text-success
+                span(data-i18n="secure_payments") Secure Payments
+            button.btn.btn-primary(style="margin-top: 16px;")
+              i.fas.fa-lock
+              span(data-i18n="enhance_security") Enhance Security
+
+        // Verification Guide
+        .card(style="margin-top: 24px;")
+          .card-header
+            h3(data-i18n="verification_guide") Verification Guide
+            .card-icon.icon-info
+              i.fas.fa-info-circle
+          .verification-steps
+            .step
+              .step-number 1
+              .step-content
+                h4(data-i18n="step_one") Position Your Face
+                p(data-i18n="step_one_desc") Ensure your face is clearly visible in good lighting
+            .step
+              .step-number 2
+              .step-content
+                h4(data-i18n="step_two") Remove Accessories
+                p(data-i18n="step_two_desc") Remove hats, sunglasses, or anything covering your face
+            .step
+              .step-number 3
+              .step-content
+                h4(data-i18n="step_three") Follow Instructions
+                p(data-i18n="step_three_desc") Follow the on-screen instructions for verification
+
+      // Settings Section
+      #settings.section
+        .card
+          .card-header
+            h3(data-i18n="account_settings") Account Settings
+            .card-icon.icon-primary
+              i.fas.fa-user-cog
+          .form-group
+            label(for="userName" data-i18n="full_name") Full Name
+            input#userName(type="text" value=user && user.name ? user.name : '' data-i18n="enter_full_name" placeholder="Your full name")
+          .form-group
+            label(for="userEmail" data-i18n="email") Email
+            input#userEmail(type="email" value=user && user.email ? user.email : '' data-i18n="enter_email" placeholder="Your email" readonly)
+          .form-group
+            label(for="userPhone" data-i18n="phone_number") Phone Number
+            input#userPhone(type="tel" data-i18n="enter_phone" placeholder="Your phone number")
+          button.btn.btn-primary(onclick="updateProfile()")
+            i.fas.fa-save
+            span(data-i18n="update_profile") Update Profile
+
+        .card(style="margin-top: 24px;")
+          .card-header
+            h3(data-i18n="privacy_security") Privacy & Security
+            .card-icon.icon-danger
+              i.fas.fa-shield-alt
+          .privacy-settings
+            .setting-item
+              label
+                input(type="checkbox" id="shareLocation" checked)
+                span(data-i18n="share_live_location") Share live location with trusted contacts
+            .setting-item
+              label
+                input(type="checkbox" id="enableSafetyCheckins" checked)
+                span(data-i18n="enable_safety_checkins") Enable safety check-ins
+            .setting-item
+              label
+                input(type="checkbox" id="shareRideHistory")
+                span(data-i18n="share_ride_history") Share ride history for safety improvements
+          button.btn.btn-primary(onclick="savePrivacySettings()")
+            i.fas.fa-save
+            span(data-i18n="save_preferences") Save Preferences
+
+        // Payment Methods
+        .card(style="margin-top: 24px;")
+          .card-header
+            h3(data-i18n="payment_methods") Payment Methods
+            .card-icon.icon-success
+              i.fas.fa-credit-card
+          .payment-methods
+            .payment-option(onclick="selectPaymentMethod('mobile_money')")
+              .payment-icon
+                i.fas.fa-mobile-alt
+              .payment-info
+                span.payment-name(data-i18n="mobile_money") Mobile Money
+                span.payment-desc(data-i18n="mobile_money_desc") Pay with MTN, Airtel Money
+            .payment-option(onclick="selectPaymentMethod('paypal')")
+              .payment-icon
+                i.fab.fa-paypal
+              .payment-info
+                span.payment-name PayPal
+                span.payment-desc(data-i18n="paypal_desc") Secure PayPal payments
+            .payment-option(onclick="selectPaymentMethod('card')")
+              .payment-icon
+                i.fas.fa-credit-card
+              .payment-info
+                span.payment-name(data-i18n="credit_card") Credit Card
+                span.payment-desc(data-i18n="card_desc") Visa, MasterCard, Amex
+            .payment-option(onclick="selectPaymentMethod('pesapal')")
+              .payment-icon
+                i.fas.fa-wallet
+              .payment-info
+                span.payment-name PesaPal
+                span.payment-desc(data-i18n="pesapal_desc") Local payment solution
+          .card-scanning(style="margin-top: 16px; display: none;" id="cardScanning")
+            button.btn.btn-secondary(onclick="scanCard()")
+              i.fas.fa-camera
+              span(data-i18n="scan_card") Scan Card
+
+    // SOS Button
+    .sos-container
+      button.sos-button(onclick="showSOSOptions()")
+        i.fas.fa-bell
+        span(data-i18n="sos") SOS
+
+    // Modals
+    .modal#driverDetailModal
+      .modal-content
+        .modal-header
+          h3(data-i18n="driver_details") Driver Details
+          span.close(onclick="closeModal('driverDetailModal')") &times;
+        .modal-body#driverDetailContent
+
+    .modal#plateScannerModal
+      .modal-content
+        .modal-header
+          h3(data-i18n="scan_plate") Scan Vehicle Plate
+          span.close(onclick="closePlateScanner()") &times;
+        .modal-body
+          .scanner-container
+            video#plateScannerVideo(autoplay playsinline)
+            canvas#plateScannerCanvas(style="display: none;")
+          .scanner-controls
+            button.btn.btn-primary(onclick="startPlateScanner()")
+              i.fas.fa-camera
+              span(data-i18n="start_scanning") Start Scanning
+            button.btn.btn-secondary(onclick="stopPlateScanner()")
+              i.fas.fa-stop
+              span(data-i18n="stop_scanning") Stop Scanning
+          .scan-result#plateScanResult
+
+    .modal#faceVerificationModal
+      .modal-content
+        .modal-header
+          h3(data-i18n="face_verification") Face Verification
+          span.close(onclick="closeFaceVerification()") &times;
+        .modal-body
+          .camera-container
+            video#faceCamera(autoplay playsinline)
+            canvas#faceCanvas(style="display: none;")
+          .verification-controls
+            button.btn.btn-primary(onclick="captureFace()")
+              i.fas.fa-camera
+              span(data-i18n="capture_face") Capture Face
+            button.btn.btn-secondary(onclick="retakeFace()")
+              i.fas.fa-redo
+              span(data-i18n="retake_photo") Retake Photo
+          .verification-result#faceVerificationResult
+
+    .modal#sosOptionsModal
+      .modal-content
+        .modal-header
+          h3(data-i18n="emergency_options") Emergency Options
+          span.close(onclick="closeModal('sosOptionsModal')") &times;
+        .modal-body
+          .sos-options
+            .sos-option.emergency(onclick="triggerEmergencySOS()")
+              i.fas.fa-bell
+              .sos-info
+                h4(data-i18n="emergency_sos") Emergency SOS
+                p(data-i18n="immediate_help") Immediate help from authorities
+            .sos-option.voice(onclick="startVoiceSOSRecording()")
+              i.fas.fa-microphone
+              .sos-info
+                h4(data-i18n="voice_sos") Voice SOS
+                p(data-i18n="record_voice_message") Record and send voice message
+            .sos-option.medical(onclick="triggerMedicalSOS()")
+              i.fas.fa-plus-square
+              .sos-info
+                h4(data-i18n="medical_emergency") Medical Emergency
+                p(data-i18n="medical_assistance") Request medical assistance
+
+    .modal#voiceSOSModal
+      .modal-content
+        .modal-header
+          h3(data-i18n="record_voice_sos") Record Voice SOS
+          span.close(onclick="closeVoiceSOSRecording()") &times;
+        .modal-body
+          .recording-container
+            .recording-indicator#voiceRecordingIndicator
+              i.fas.fa-microphone
+              span(data-i18n="recording") Recording...
+            .recording-timer#voiceRecordingTimer 00:00
+            .recording-waveform#voiceRecordingWaveform
+          .recording-controls
+            button.btn.btn-danger(onclick="stopVoiceSOSRecording()")
+              i.fas.fa-stop
+              span(data-i18n="stop_recording") Stop Recording
+            button.btn.btn-secondary(onclick="cancelVoiceSOSRecording()")
+              i.fas.fa-times
+              span(data-i18n="cancel") Cancel
+          .recording-actions#voiceRecordingActions(style="display: none;")
+            button.btn.btn-success(onclick="sendVoiceSOS()")
+              i.fas.fa-paper-plane
+              span(data-i18n="send_sos") Send SOS
+            button.btn.btn-warning(onclick="reRecordVoiceSOS()")
+              i.fas.fa-redo
+              span(data-i18n="re_record") Re-record
+            button.btn.btn-secondary(onclick="downloadVoiceSOS()")
+              i.fas.fa-download
+              span(data-i18n="download") Download
+
+    .modal#incidentModal
+      .modal-content
+        .modal-header
+          h3(data-i18n="report_incident") Report Incident
+          span.close(onclick="closeModal('incidentModal')") &times;
+        .modal-body
+          form#incidentForm
+            input(type="hidden" id="incidentType")
+            .form-group
+              label(for="incidentCategory" data-i18n="incident_category") Incident Category
+              select#incidentCategory(name="category" required)
+                option(value="" data-i18n="select_category") Select Category
+                option(value="unsafe_driving") Unsafe Driving
+                option(value="harassment") Harassment
+                option(value="vehicle_issue") Vehicle Issue
+                option(value="route_deviation") Route Deviation
+                option(value="payment_issue") Payment Issue
+                option(value="other") Other
+            .form-group
+              label(for="incidentDescription" data-i18n="description") Description
+              textarea#incidentDescription(name="description" data-i18n="describe_incident" placeholder="Please describe the incident in detail..." rows="4" required)
+            .form-group
+              label(data-i18n="add_evidence") Add Evidence (Optional)
+              .evidence-options
+                button.btn.btn-secondary(type="button" onclick="uploadIncidentFile()")
+                  i.fas.fa-upload
+                  span(data-i18n="upload_file") Upload File
+              .evidence-preview#evidencePreview
+            .form-actions
+              button.btn.btn-primary(type="submit")
+                i.fas.fa-flag
+                span(data-i18n="report_incident") Report Incident
+              button.btn.btn-secondary(type="button" onclick="closeModal('incidentModal')")
+                i.fas.fa-times
+                span(data-i18n="cancel") Cancel
+
+    .modal#addContactModal
+      .modal-content
+        .modal-header
+          h3(data-i18n="add_trusted_contact") Add Trusted Contact
+          span.close(onclick="closeModal('addContactModal')") &times;
+        .modal-body
+          form#addContactForm
+            .form-group
+              label(for="contactName" data-i18n="full_name") Full Name
+              input#contactName(type="text" data-i18n="enter_contact_name" placeholder="Contact's full name" required)
+            .form-group
+              label(for="contactPhone" data-i18n="phone_number") Phone Number
+              input#contactPhone(type="tel" data-i18n="enter_contact_phone" placeholder="Contact's phone number" required)
+            .form-group
+              label(for="contactEmail" data-i18n="email") Email (Optional)
+              input#contactEmail(type="email" data-i18n="enter_contact_email" placeholder="Contact's email")
+            .form-group
+              label(for="contactRelationship" data-i18n="relationship") Relationship
+              select#contactRelationship(name="relationship" required)
+                option(value="" data-i18n="select_relationship") Select Relationship
+                option(value="family") Family Member
+                option(value="friend") Friend
+                option(value="emergency") Emergency Contact
+                option(value="other") Other
+            .form-actions
+              button.btn.btn-primary(type="submit")
+                i.fas.fa-plus
+                span(data-i18n="add_contact") Add Contact
+              button.btn.btn-secondary(type="button" onclick="closeModal('addContactModal')")
+                i.fas.fa-times
+                span(data-i18n="cancel") Cancel
+
+    // Booking Confirmation Modal
+    .modal#bookingConfirmationModal
+      .modal-content(style="max-width: 500px;")
+        .modal-header
+          h3 Confirm Booking
+          span.close(onclick="closeModal('bookingConfirmationModal')") &times;
+        .modal-body#bookingConfirmationContent
+
+    // Ride Map Modal
+    .modal#rideMapModal
+      .modal-content(style="max-width: 800px;")
+        .modal-header
+          h3 Your Ride
+          span.close(onclick="closeModal('rideMapModal')") &times;
+        .modal-body#rideMapContent
+
+    // Full Profile Verification Modal
+    .modal#fullProfileVerificationModal
+      .modal-content(style="max-width: 600px;")
+        .modal-header
+          h3 Profile Verification
+          span.close(onclick="closeModal('fullProfileVerificationModal')") &times;
+        .modal-body#fullProfileVerificationContent
+
+    // Voice Incident Recording Modal
+    .modal#voiceIncidentModal
+      .modal-content
+        .modal-header
+          h3 Record Voice Incident
+          span.close(onclick="closeVoiceIncidentRecording()") &times;
+        .modal-body
+          .incident-recording-container
+            .recording-indicator
+              i.fas.fa-microphone
+              span(data-i18n="recording") Recording...
+            .recording-visualizer
+              .waveform#voiceWaveform
+            .recording-timer#incidentVoiceTimer 00:00
+            .recording-controls
+              button.btn.btn-danger(onclick="stopIncidentRecording()")
+                i.fas.fa-stop
+                span(data-i18n="stop_recording") Stop Recording
+              button.btn.btn-secondary(onclick="closeVoiceIncidentRecording()")
+                i.fas.fa-times
+                span(data-i18n="cancel") Cancel
+
+    // Video Incident Recording Modal
+    .modal#videoIncidentModal
+      .modal-content
+        .modal-header
+          h3 Record Video Incident
+          span.close(onclick="closeVideoIncidentRecording()") &times;
+        .modal-body
+          .incident-recording-container
+            .recording-indicator
+              i.fas.fa-video
+              span(data-i18n="recording") Recording...
+            video#liveIncidentVideo(autoplay muted style="width: 100%; max-height: 300px; background: #000; border-radius: 8px;")
+            .recording-timer#incidentVideoTimer 00:00
+            .recording-controls
+              button.btn.btn-danger(onclick="stopVideoIncidentRecording()")
+                i.fas.fa-stop
+                span(data-i18n="stop_recording") Stop Recording
+              button.btn.btn-secondary(onclick="closeVideoIncidentRecording()")
+                i.fas.fa-times
+                span(data-i18n="cancel") Cancel
+
+    // Message Container
+    #messageContainer
+
+    script(src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js")
+    script(src="/socket.io/socket.io.js")
     script(src="/js/passenger.js")
