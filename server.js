@@ -17,7 +17,7 @@ const driverRoutes = require("./routes/driverRoutes");
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
-const PORT = 3000;
+const PORT = 4000;
 
 // Store active connections
 const activeConnections = {
